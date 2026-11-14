@@ -1,0 +1,1634 @@
+<title>CIO Desk</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+/* ── TOKENS ──────────────────────────────────────────── */
+:root {
+  --bg: #f5f4f1;
+  --bg2: #edecea;
+  --bg3: #e3e2de;
+  --fg: #1a1917;
+  --fg2: #4a4845;
+  --fg3: #7a7875;
+  --border: #d0cec9;
+  --accent: #0f2d6b;
+  --accent2: #1a3f8f;
+  --good: #145c30;
+  --good-bg: #e8f5ec;
+  --warn: #704800;
+  --warn-bg: #fef3e2;
+  --bad: #8f1a1a;
+  --bad-bg: #fdeaea;
+  --neu: #2a4a6b;
+  --neu-bg: #e8f0fb;
+  --pill-what: #0f2d6b;
+  --pill-what-bg: #e8edf8;
+  --pill-why: #704800;
+  --pill-why-bg: #fef3e2;
+  --pill-do: #145c30;
+  --pill-do-bg: #e8f5ec;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e0d0c;
+    --bg2: #161513;
+    --bg3: #1f1e1b;
+    --fg: #f0ede8;
+    --fg2: #b8b4ae;
+    --fg3: #7a7875;
+    --border: #2e2c28;
+    --accent: #4a7fd4;
+    --accent2: #6a9fe4;
+    --good: #2ecc71;
+    --good-bg: #0a1f12;
+    --warn: #f0a030;
+    --warn-bg: #1f1200;
+    --bad: #e05050;
+    --bad-bg: #1f0a0a;
+    --neu: #6a9fe4;
+    --neu-bg: #0a1225;
+    --pill-what: #4a7fd4;
+    --pill-what-bg: #0a1225;
+    --pill-why: #f0a030;
+    --pill-why-bg: #1f1200;
+    --pill-do: #2ecc71;
+    --pill-do-bg: #0a1f12;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e0d0c; --bg2: #161513; --bg3: #1f1e1b;
+  --fg: #f0ede8; --fg2: #b8b4ae; --fg3: #7a7875;
+  --border: #2e2c28; --accent: #4a7fd4; --accent2: #6a9fe4;
+  --good: #2ecc71; --good-bg: #0a1f12;
+  --warn: #f0a030; --warn-bg: #1f1200;
+  --bad: #e05050; --bad-bg: #1f0a0a;
+  --neu: #6a9fe4; --neu-bg: #0a1225;
+  --pill-what: #4a7fd4; --pill-what-bg: #0a1225;
+  --pill-why: #f0a030; --pill-why-bg: #1f1200;
+  --pill-do: #2ecc71; --pill-do-bg: #0a1f12;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  font-size: 13px;
+  background: var(--bg);
+  color: var(--fg);
+  padding-left: max(0px, env(safe-area-inset-left,0px));
+  padding-right: max(0px, env(safe-area-inset-right,0px));
+  padding-bottom: env(safe-area-inset-bottom,0px);
+}
+.mono { font-family: 'IBM Plex Mono', monospace; }
+
+/* ── MASTHEAD ────────────────────────────────────────── */
+.masthead {
+  background: #0a0a0a;
+  color: #fff;
+  padding: 0 max(20px,env(safe-area-inset-left,0px));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  position: sticky;
+  top: env(safe-area-inset-top,0px);
+  z-index: 100;
+}
+body::before {
+  content:"";
+  position:fixed;
+  inset:0 0 auto;
+  height:env(safe-area-inset-top,0px);
+  background:#0a0a0a;
+  z-index:101;
+}
+.masthead-brand { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; font-weight: 600; }
+.masthead-brand span { opacity: .45; font-weight: 400; margin-left: 8px; }
+.masthead-meta { font-size: 10px; opacity: .4; font-family: 'IBM Plex Mono', monospace; letter-spacing: .05em; }
+
+/* ── NAV TABS ────────────────────────────────────────── */
+.nav-bar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-left: max(16px,env(safe-area-inset-left,0px));
+}
+.nav-bar::-webkit-scrollbar { display: none; }
+.nav-tab {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--fg3);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color .15s, border-color .15s;
+  user-select: none;
+}
+.nav-tab:hover { color: var(--fg); }
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── PAGE CONTENT ────────────────────────────────────── */
+.page { display: none; padding: max(20px,16px) max(20px,env(safe-area-inset-left,0px)); max-width: 1200px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* ── ANSWER ON THE PAGE BOX ──────────────────────────── */
+.aop {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 4px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+.aop-label {
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  opacity: .6;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.aop-title {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 10px;
+  text-wrap: balance;
+}
+.aop-body { font-size: 12px; line-height: 1.65; opacity: .88; }
+.aop-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.aop-pill {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 2px;
+  padding: 3px 8px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .04em;
+}
+.aop-pill.g { background: rgba(20,92,48,.5); border-color: rgba(20,92,48,.7); }
+.aop-pill.r { background: rgba(143,26,26,.5); border-color: rgba(143,26,26,.7); }
+.aop-pill.y { background: rgba(112,72,0,.5); border-color: rgba(112,72,0,.7); }
+
+/* ── SECTION HEADER ──────────────────────────────────── */
+.section-hd {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 24px 0 12px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
+}
+.section-hd h2 {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--fg2);
+}
+.section-hd .sub { font-size: 10px; color: var(--fg3); }
+
+/* ── INDICATOR GRID ──────────────────────────────────── */
+.ind-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 12px; margin-bottom: 20px; }
+
+.ind-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 14px;
+}
+.ind-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; }
+.ind-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--fg2); }
+.badge {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.badge.g { background: var(--good-bg); color: var(--good); }
+.badge.r { background: var(--bad-bg); color: var(--bad); }
+.badge.y { background: var(--warn-bg); color: var(--warn); }
+.badge.b { background: var(--neu-bg); color: var(--neu); }
+
+.ind-value { font-family: 'IBM Plex Mono', monospace; font-size: 24px; font-weight: 600; line-height: 1; margin-bottom: 4px; }
+.ind-sub { font-size: 11px; color: var(--fg3); margin-bottom: 10px; }
+
+/* Three-pill commentary */
+.ind-detail { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+.pill-row { display: flex; gap: 6px; align-items: flex-start; }
+.pill-tag {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.pill-tag.what { background: var(--pill-what-bg); color: var(--pill-what); }
+.pill-tag.why { background: var(--pill-why-bg); color: var(--pill-why); }
+.pill-tag.do { background: var(--pill-do-bg); color: var(--pill-do); }
+.pill-text { font-size: 11px; line-height: 1.5; color: var(--fg2); }
+
+/* ── TLDR BOX ────────────────────────────────────────── */
+.tldr {
+  background: var(--bg3);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 3px 3px 0;
+  padding: 12px 14px;
+  margin: 10px 0 20px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--fg2);
+}
+.tldr strong { color: var(--fg); display: block; margin-bottom: 4px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; }
+
+/* ── TABLE ───────────────────────────────────────────── */
+.tbl-wrap { overflow-x: auto; margin-bottom: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--fg3);
+  text-align: left;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+}
+th.r, td.r { text-align: right; }
+td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg2);
+}
+tr:last-child td { border-bottom: none; }
+.g-txt { color: var(--good); font-weight: 500; }
+.r-txt { color: var(--bad); font-weight: 500; }
+.y-txt { color: var(--warn); font-weight: 500; }
+.mono-cell { font-family: 'IBM Plex Mono', monospace; }
+
+/* ── SIGNAL CARDS (Overview) ─────────────────────────── */
+.sig-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 10px; margin-bottom: 20px; }
+.sig-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 14px;
+  cursor: pointer;
+}
+.sig-card:hover { border-color: var(--accent); }
+.sig-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.sig-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--fg2); }
+.sig-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.sig-dot.g { background: var(--good); }
+.sig-dot.r { background: var(--bad); }
+.sig-dot.y { background: var(--warn); }
+.sig-headline { font-size: 13px; font-weight: 600; line-height: 1.4; margin-bottom: 6px; }
+.sig-sub { font-size: 11px; color: var(--fg3); line-height: 1.5; }
+
+/* ── CREDIT GATE ─────────────────────────────────────── */
+.gate-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--good-bg);
+  border: 1px solid rgba(20,92,48,.2);
+  border-left: 4px solid var(--good);
+  border-radius: 3px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.gate-box.closed { background: var(--bad-bg); border-color: rgba(143,26,26,.2); border-left-color: var(--bad); }
+.gate-label { font-size: 9px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+.gate-label.g { color: var(--good); }
+.gate-label.r { color: var(--bad); }
+.gate-value { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; }
+.gate-desc { font-size: 11px; color: var(--fg2); line-height: 1.5; }
+
+/* ── WORLD COUNTRY CARDS ─────────────────────────────── */
+.country-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 16px; margin-bottom: 20px; }
+.country-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.country-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+.country-name { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.country-name .flag { font-size: 18px; }
+.country-body { padding: 12px 14px; }
+.country-narrative { font-size: 11px; line-height: 1.6; color: var(--fg2); margin-bottom: 12px; }
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.kpi-cell {
+  background: var(--bg2);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.kpi-label { font-size: 9px; color: var(--fg3); letter-spacing: .06em; text-transform: uppercase; }
+.kpi-val { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 5px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.dot.g { background: var(--good); }
+.dot.r { background: var(--bad); }
+.dot.y { background: var(--warn); }
+
+/* ── POSITIONS ───────────────────────────────────────── */
+.pos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 12px; }
+.pos-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 14px;
+}
+.pos-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.pos-ticker { font-family: 'IBM Plex Mono', monospace; font-size: 16px; font-weight: 600; }
+.pos-name { font-size: 11px; color: var(--fg3); margin-bottom: 8px; }
+.pos-stats { display: flex; gap: 16px; }
+.pos-stat { display: flex; flex-direction: column; gap: 2px; }
+.pos-stat-label { font-size: 9px; color: var(--fg3); letter-spacing: .08em; text-transform: uppercase; }
+.pos-stat-val { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; }
+.pos-thesis { font-size: 11px; color: var(--fg2); line-height: 1.55; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
+
+/* ── EVENTS ──────────────────────────────────────────── */
+.event-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.event-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 12px;
+  align-items: start;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 12px 14px;
+}
+.event-date { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--fg3); }
+.event-title { font-size: 12px; font-weight: 500; }
+.event-sub { font-size: 11px; color: var(--fg3); margin-top: 2px; }
+.event-odds { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; text-align: right; }
+
+/* ── OVERVIEW THESIS ─────────────────────────────────── */
+.thesis {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+.thesis-eyebrow { font-size: 9px; letter-spacing: .2em; text-transform: uppercase; opacity: .55; margin-bottom: 8px; font-weight: 600; }
+.thesis h1 { font-size: 20px; font-weight: 700; line-height: 1.3; margin-bottom: 10px; text-wrap: balance; }
+.thesis-body { font-size: 12px; line-height: 1.7; opacity: .9; }
+
+/* ── REGIME CHIPS ────────────────────────────────────── */
+.regime-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.regime-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 6px 10px;
+  font-size: 11px;
+}
+.regime-chip .dot { margin: 0; }
+.regime-chip strong { font-weight: 600; }
+
+/* ── ALERT BOX ───────────────────────────────────────── */
+.alert-box {
+  border-radius: 3px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  line-height: 1.6;
+  border-left-width: 4px;
+  border-left-style: solid;
+}
+.alert-box.crisis { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+.alert-box.crisis .alert-title { font-weight: 700; margin-bottom: 4px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; }
+.alert-box.crisis .alert-body { color: var(--fg); }
+.alert-box.warn { background: var(--warn-bg); border-color: var(--warn); }
+.alert-box.warn .alert-title { color: var(--warn); font-weight: 700; margin-bottom: 4px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; }
+.alert-box.warn .alert-body { color: var(--fg); }
+
+/* ── SPARKLINE-ISH BAR ───────────────────────────────── */
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.bar-label { font-size: 11px; color: var(--fg2); width: 110px; flex-shrink: 0; }
+.bar-track { flex: 1; background: var(--bg3); border-radius: 2px; height: 6px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 2px; }
+.bar-val { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--fg2); width: 54px; text-align: right; flex-shrink: 0; }
+
+/* ── ASSET CLASS GRID ────────────────────────────────── */
+.asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 10px; margin-bottom: 20px; }
+.asset-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 12px;
+}
+.asset-label { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--fg2); margin-bottom: 4px; }
+.asset-val { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 600; }
+.asset-chg { font-size: 11px; margin-top: 4px; }
+.asset-note { font-size: 10px; color: var(--fg3); margin-top: 6px; line-height: 1.4; }
+
+/* ── RESPONSIVE ──────────────────────────────────────── */
+@media (max-width: 600px) {
+  .ind-grid { grid-template-columns: 1fr 1fr; }
+  .country-grid { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .event-row { grid-template-columns: 80px 1fr; }
+  .event-odds { grid-column: 2; }
+  .pos-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-brand">CIO Desk <span>· AD HOC</span></div>
+  <div class="masthead-meta">NOV 13 2026 · 07:00 ET</div>
+</div>
+
+<!-- NAV -->
+<div class="nav-bar" id="nav">
+  <div class="nav-tab active" data-page="overview">Overview</div>
+  <div class="nav-tab" data-page="macro">US Macro</div>
+  <div class="nav-tab" data-page="bonds">Bonds</div>
+  <div class="nav-tab" data-page="world">World</div>
+  <div class="nav-tab" data-page="markets">Markets</div>
+  <div class="nav-tab" data-page="positions">Positions</div>
+  <div class="nav-tab" data-page="events">Events</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: OVERVIEW
+     ═══════════════════════════════════════════════════ -->
+<div class="page active" id="overview">
+
+  <div class="thesis">
+    <div class="thesis-eyebrow">Answer on the Page · Overview</div>
+    <h1>Goldilocks is real — but the clock is ticking on the 5% 10Y</h1>
+    <p class="thesis-body">
+      The US economy is delivering a rare simultaneous win: manufacturing re-accelerated (ISM Mfg 55.5), services held firm (ISM Svcs 54.5), and payrolls came in solid (+165k) while unemployment edged up only to 4.1%. Core PCE at 2.7% keeps the Fed on hold at 3.75–4.00% — no cuts, no hikes. The HY OAS credit gate is open (330bp vs 376bp threshold), authorising equity exposure. Democrats won the midterms Nov 4, removing the tail risk of fiscal recklessness. The single tension: the 10Y at 5.05% is simultaneously the market's inflation anchoring signal and its biggest valuation headwind for equities. We stay risk-on but duration-cautious.
+    </p>
+  </div>
+
+  <div class="gate-box">
+    <div>
+      <div class="gate-label g">■ CREDIT GATE OPEN</div>
+      <div class="gate-value mono">330 bp</div>
+    </div>
+    <div class="gate-desc">HY OAS 330bp vs threshold 376bp. Spread compression authorises equity overweight. Gate closes if OAS breaks above 376bp — monitor KRE and XRT for leading signals.</div>
+  </div>
+
+  <div class="section-hd"><h2>Regime Signals</h2></div>
+  <div class="regime-row">
+    <div class="regime-chip"><div class="dot g"></div><strong>Growth</strong> Re-accelerating</div>
+    <div class="regime-chip"><div class="dot y"></div><strong>Inflation</strong> Sticky 2.7%</div>
+    <div class="regime-chip"><div class="dot b"></div><strong>Fed</strong> On hold</div>
+    <div class="regime-chip"><div class="dot g"></div><strong>Credit</strong> Gate open</div>
+    <div class="regime-chip"><div class="dot y"></div><strong>Rates</strong> 5.05% 10Y</div>
+    <div class="regime-chip"><div class="dot g"></div><strong>Equities</strong> Risk-on</div>
+    <div class="regime-chip"><div class="dot r"></div><strong>Europe</strong> Stressed</div>
+    <div class="regime-chip"><div class="dot g"></div><strong>India</strong> Outperforming</div>
+  </div>
+
+  <div class="section-hd"><h2>Page Signals</h2><span class="sub">Click to navigate</span></div>
+  <div class="sig-grid">
+    <div class="sig-card" onclick="showPage('macro')">
+      <div class="sig-top"><div class="sig-label">US Macro</div><div class="sig-dot g"></div></div>
+      <div class="sig-headline">Goldilocks: ISM Mfg 55.5, Svcs 54.5, +165k payrolls</div>
+      <div class="sig-sub">Fed on hold. Core PCE 2.7%. Manufacturing renaissance underway. Soft landing confirmed.</div>
+    </div>
+    <div class="sig-card" onclick="showPage('bonds')">
+      <div class="sig-top"><div class="sig-label">Bonds</div><div class="sig-dot y"></div></div>
+      <div class="sig-headline">10Y at 5.05% — bear steepener driving spread anxiety</div>
+      <div class="sig-sub">France in fiscal crisis (OAT-Bund 156bp). IG/HY holding. Duration: underweight.</div>
+    </div>
+    <div class="sig-card" onclick="showPage('world')">
+      <div class="sig-top"><div class="sig-label">World</div><div class="sig-dot y"></div></div>
+      <div class="sig-headline">India leading; China stimulating; Europe fracturing</div>
+      <div class="sig-sub">EM diverging sharply. India GDP 7.4% — best large-economy growth globally. China fiscal bazooka in progress.</div>
+    </div>
+    <div class="sig-card" onclick="showPage('markets')">
+      <div class="sig-top"><div class="sig-label">Markets</div><div class="sig-dot g"></div></div>
+      <div class="sig-headline">Rotation: Tech → Healthcare. 7 of 11 sectors flipped YTD</div>
+      <div class="sig-sub">XLK −11.5% from peak, XLV +10.7%. Real money flows into KRE, REITs recovering. VIX 17 — complacent but not dangerous.</div>
+    </div>
+    <div class="sig-card" onclick="showPage('positions')">
+      <div class="sig-top"><div class="sig-label">Positions</div><div class="sig-dot y"></div></div>
+      <div class="sig-headline">New: SLV, QRT. Hard stop watch: 3067.HK</div>
+      <div class="sig-sub">Silver breakout confirms reflation trade. QRT: smart-money 13F convergence. 3067.HK approaching stop.</div>
+    </div>
+    <div class="sig-card" onclick="showPage('events')">
+      <div class="sig-top"><div class="sig-label">Events</div><div class="sig-dot b"></div></div>
+      <div class="sig-headline">Fed Dec 11 · CPI Nov 13 · ECB Dec 12</div>
+      <div class="sig-sub">Market pricing 92% hold at December FOMC. France confidence vote risk elevated. Polymarket: 73% no rate cut Dec.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: US MACRO
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="macro">
+  <div class="aop">
+    <div class="aop-label">Answer on the Page · US Macro</div>
+    <div class="aop-title">The US is in a rare goldilocks: strong growth, cooling (not cold) inflation, Fed on hold</div>
+    <div class="aop-body">
+      Manufacturing has re-accelerated to 55.5 — a 26-month high — driven by reshoring capex and defence orders. Services remain robust at 54.5. The labour market added 165k jobs in October, well above the 100k break-even, while unemployment ticked to 4.1%, signalling gradual normalisation not deterioration. Core PCE at 2.7% (Core CPI +0.3% MoM) is too warm for cuts but too cool for hikes. The Fed will hold at 3.75–4.00% through H1 2027. This macro backdrop is equity-positive: earnings re-ratings are underway in cyclicals, industrials, and defence. The risk: a 10Y above 5% long enough to compress P/E multiples for growth stocks.
+    </div>
+    <div class="aop-pills">
+      <span class="aop-pill g">Manufacturing renaissance</span>
+      <span class="aop-pill g">Labour: healthy</span>
+      <span class="aop-pill y">Inflation: sticky</span>
+      <span class="aop-pill y">Fed: on hold</span>
+      <span class="aop-pill r">10Y: headwind</span>
+    </div>
+  </div>
+
+  <div class="section-hd"><h2>Growth &amp; Activity</h2></div>
+  <div class="ind-grid">
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">ISM Manufacturing</div><div class="badge g">Expansion</div></div>
+      <div class="ind-value">55.5</div>
+      <div class="ind-sub">26-month high · prev 54.1</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Purchasing managers' survey of manufacturing activity. Above 50 = expansion.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">The reshoring mega-cycle (CHIPS Act, IRA) is converting announced capex into actual orders. Defence procurement at 23-year high. Auto sector back after EV retooling pause.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Overweight industrials (XLI), domestic manufacturers. CHIPS beneficiaries: ON, ENTG. Avoid import-dependent retailers.</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">ISM Services</div><div class="badge g">Expansion</div></div>
+      <div class="ind-value">54.5</div>
+      <div class="ind-sub">Solid · prev 53.8</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Composite reading of service-sector activity covering 70%+ of US GDP.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Healthcare spending at cycle high. Tech services (AI infra spend) lifting business services sub-index. Consumer services (travel, dining) moderating but resilient.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Maintain healthcare overweight (XLV). Watch employment sub-index — if it breaks below 50, payroll deceleration follows in 60 days.</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">Nonfarm Payrolls</div><div class="badge g">Healthy</div></div>
+      <div class="ind-value">+165k</div>
+      <div class="ind-sub">Oct · above 100k break-even</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Net new jobs added to US economy. 100k per month covers population growth; above = tightening labour market.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Healthcare and construction leading (reshoring + IRA). Tech flat — still working through 2024-25 hiring correction. Government hiring subdued post-election uncertainty.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Payrolls support consumer spending. Maintain consumer discretionary selective exposure (AMZN, COST). Avoid leveraged consumer plays (high-yield retail).</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">Unemployment Rate</div><div class="badge g">Low</div></div>
+      <div class="ind-value">4.1%</div>
+      <div class="ind-sub">Oct · up from 4.0%</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Share of labour force actively seeking work. Fed's dual mandate target is "maximum employment" — historically ~4%.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Gradual normalisation, not deterioration. Labour force participation rising (prime-age workers returning). No mass layoffs — this is organic cooling.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">4.5% is the Fed's threshold for cutting urgency. Currently 40bp from that level — monitor monthly. No action required at 4.1%.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-hd"><h2>Inflation</h2></div>
+  <div class="ind-grid">
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">Core CPI MoM</div><div class="badge y">Sticky</div></div>
+      <div class="ind-value">+0.3%</div>
+      <div class="ind-sub">Oct MoM · 3.3% YoY</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Headline consumer price index excluding food and energy. 0.2% MoM = 2.4% annualised (Fed target); 0.3% = 3.6% annualised.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Shelter inflation (OER) stubborn at +0.4% MoM — lags actual rent by 12-18 months. Auto insurance and medical care re-accelerating. This is the stickiest component.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Shelter will mechanically cool by Q2 2027 as new leases roll through CPI. No Fed action on 0.3%; watch for two consecutive 0.4%+ prints as hike signal.</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">Core PCE</div><div class="badge y">Above Target</div></div>
+      <div class="ind-value">2.7%</div>
+      <div class="ind-sub">Sep YoY · Fed's preferred measure</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Personal Consumption Expenditures price index — the Fed's official 2% target measure. Weighs categories differently from CPI (more healthcare, less shelter).</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">At 2.7%, it's 70bp above the 2% target. The Fed needs to see this sustainably at 2.0–2.3% before cutting. Services inflation (non-housing) is the sticking point.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">No cuts until PCE approaches 2.3%. Hold short-duration bias (2Y at 4.71% is attractive vs 10Y risk). TIPS breakevens at 2.3% — slightly cheap.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-hd"><h2>Monetary Policy</h2></div>
+  <div class="ind-grid">
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">Fed Funds Rate</div><div class="badge b">On Hold</div></div>
+      <div class="ind-value">3.75–4.00%</div>
+      <div class="ind-sub">Held at Nov FOMC · +25bp hike risk if PCE re-accelerates</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">The overnight rate banks charge each other, controlled by the Fed. The core lever of US monetary policy.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Paused since the 25bp cut in Sep 2025. Growth re-acceleration removes urgency to cut. PCE at 2.7% prevents cuts. The Fed is in "wait and assess" mode — data dependency is maximum.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Price in hold through mid-2027. 2Y UST at 4.71% offers attractive carry with minimal duration risk. Fed policy is a tailwind for equities (no overtightening risk).</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">10Y Treasury Yield</div><div class="badge r">Headwind</div></div>
+      <div class="ind-value">5.05%</div>
+      <div class="ind-sub">Nov 13 · 30Y at 5.31%</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">The long-end benchmark rate — the risk-free rate against which all other assets are priced. Equities compete with this for capital.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Bear steepener dynamic: front-end held by Fed; long-end moving on term premium, fiscal concerns (Democrats won but deficit still $2T+ per year), and global supply/demand imbalance in USTs (Japan selling).</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Underweight duration. Avoid long-bond ETFs (TLT). Above 5.25% would start compressing equity multiples materially — set alerts. Short-end (SHY, 2Y) is the right rate exposure.</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">2Y–10Y Spread</div><div class="badge g">Un-inverted</div></div>
+      <div class="ind-value">+34bp</div>
+      <div class="ind-sub">2Y: 4.71% · 10Y: 5.05%</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">The yield curve slope. Inverted (10Y < 2Y) has preceded every recession since 1970 by 6–24 months. Now positive = normalising.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Curve un-inverted in September 2025 after 26 months of inversion — the longest since 1980. Steepening driven by long-end term premium rising, not front-end falling. This is "bear steepening," historically less bullish than "bull steepening."</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Bear steepener = short long-bond, stay in equities. Watch 2Y–10Y reaching +75bp — at that point, long-end starts to become interesting again.</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: BONDS
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="bonds">
+  <div class="aop">
+    <div class="aop-label">Answer on the Page · Bonds</div>
+    <div class="aop-title">Bear steepener in USTs, France in fiscal crisis, credit gate open — stay short duration, avoid European sovereign risk</div>
+    <div class="aop-body">
+      The US yield curve is bear-steepening: the 10Y at 5.05% is rising on term premium, not inflation expectations alone. The 30Y at 5.31% is at a 16-year high. Meanwhile, European sovereign stress is real: France's OAT-Bund spread has blown out to 156bp — wider than 2017 (Macron's election crisis) — driven by political deadlock, 6.1% deficit-to-GDP, and a government that cannot pass a budget. HY OAS at 330bp is well inside our 376bp trigger — credit says the economic expansion is intact. The right positioning: underweight duration, stay in short-end USTs (4.71% on 2Y), hold IG credit selectively, and do not reach for European sovereign yield.</div>
+    <div class="aop-pills">
+      <span class="aop-pill y">Bear steepener</span>
+      <span class="aop-pill r">France: crisis</span>
+      <span class="aop-pill g">HY OAS: gate open</span>
+      <span class="aop-pill y">Duration: underweight</span>
+      <span class="aop-pill g">2Y UST: buy</span>
+    </div>
+  </div>
+
+  <div class="section-hd"><h2>US Treasury Yields</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Tenor</th>
+        <th class="r">Yield</th>
+        <th class="r">Chg 1W</th>
+        <th class="r">Chg 1M</th>
+        <th>Signal</th>
+        <th>Notes</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>2Y</td><td class="r mono-cell">4.71%</td><td class="r mono-cell y-txt">+8bp</td><td class="r mono-cell y-txt">+12bp</td><td><span class="badge g">Buy</span></td><td>Attractive carry; short duration</td></tr>
+        <tr><td>5Y</td><td class="r mono-cell">4.88%</td><td class="r mono-cell y-txt">+10bp</td><td class="r mono-cell y-txt">+15bp</td><td><span class="badge b">Neutral</span></td><td>Breakeven in line with PCE</td></tr>
+        <tr><td>10Y</td><td class="r mono-cell">5.05%</td><td class="r mono-cell r-txt">+14bp</td><td class="r mono-cell r-txt">+22bp</td><td><span class="badge r">Avoid</span></td><td>Bear steepener; term premium rising</td></tr>
+        <tr><td>30Y</td><td class="r mono-cell">5.31%</td><td class="r mono-cell r-txt">+16bp</td><td class="r mono-cell r-txt">+28bp</td><td><span class="badge r">Underweight</span></td><td>16-year high; fiscal overhang</td></tr>
+        <tr><td>TIPS 10Y</td><td class="r mono-cell">2.75%</td><td class="r mono-cell y-txt">+5bp</td><td class="r mono-cell y-txt">+8bp</td><td><span class="badge y">Watch</span></td><td>Breakeven 2.30% — slight buy</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tldr"><strong>TL;DR — US Rates</strong>Bear steepener in full effect. 2Y (4.71%) offers the best risk-adjusted carry. Long-end expensive on term premium — a $2T annual deficit with no fiscal anchor and Japan offloading USTs keeps long-end yields elevated. Inflation breakevens at 2.3% are mildly compelling vs current PCE of 2.7%.</div>
+
+  <div class="section-hd"><h2>European Sovereign Spreads vs Bund</h2></div>
+
+  <div class="alert-box crisis">
+    <div class="alert-title">🚨 France sovereign crisis — OAT-Bund at 156bp</div>
+    <div class="alert-body"><strong>What is happening:</strong> France's 10Y OAT spread to German Bunds has widened to 156bp — a level not seen since the 2012 eurozone debt crisis peak. France is the second-largest eurozone economy (€2.8T GDP) and its spread blowout matters structurally. The proximate causes: Prime Minister Barnier's minority government is unable to pass the 2025 budget; a no-confidence vote is imminent; fiscal projections show a 6.1% deficit-to-GDP vs a 3% EU Stability Pact ceiling; and France's public debt is on course to hit 112% of GDP by 2026. The ECB's TPI (Transmission Protection Instrument) would theoretically cap spreads, but France's fiscal slippage makes TPI eligibility politically fraught — Lagarde cannot be seen rescuing a country that refuses to consolidate. This is not a 2010-style crisis (no bank run, no sudden stop) but a slow-motion credibility loss that is repricing French risk structurally higher.</div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Country</th>
+        <th class="r">10Y Yield</th>
+        <th class="r">Spread vs Bund</th>
+        <th class="r">Chg 1M</th>
+        <th>Signal</th>
+        <th>Comment</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>🇩🇪 Germany (Bund)</td><td class="r mono-cell">2.49%</td><td class="r mono-cell">—</td><td class="r mono-cell g-txt">−2bp</td><td><span class="badge g">Safe haven</span></td><td>Fiscal surplus; AAA-rated</td></tr>
+        <tr><td>🇫🇷 France (OAT)</td><td class="r mono-cell">4.05%</td><td class="r mono-cell r-txt">+156bp</td><td class="r mono-cell r-txt">+34bp</td><td><span class="badge r">Crisis</span></td><td>Minority govt; budget blocked; 6.1% deficit</td></tr>
+        <tr><td>🇪🇸 Spain (Bonos)</td><td class="r mono-cell">3.21%</td><td class="r mono-cell y-txt">+72bp</td><td class="r mono-cell y-txt">+5bp</td><td><span class="badge y">Watch</span></td><td>Improving fundamentals; minority govt risk</td></tr>
+        <tr><td>🇮🇹 Italy (BTP)</td><td class="r mono-cell">3.74%</td><td class="r mono-cell y-txt">+125bp</td><td class="r mono-cell y-txt">+8bp</td><td><span class="badge y">Cautious</span></td><td>Stable under Meloni; ECB TPI backstop credible</td></tr>
+        <tr><td>🇬🇧 UK Gilt</td><td class="r mono-cell">4.52%</td><td class="r mono-cell y-txt">+203bp</td><td class="r mono-cell r-txt">+18bp</td><td><span class="badge y">Cautious</span></td><td>Not Bund-comparable; BoE on hold; fiscal concerns</td></tr>
+        <tr><td>🇯🇵 JGB 10Y</td><td class="r mono-cell">1.05%</td><td class="r mono-cell">—</td><td class="r mono-cell r-txt">+15bp</td><td><span class="badge b">Monitor</span></td><td>BoJ normalising; watch for UST impact if JGB rises</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tldr"><strong>TL;DR — European Spreads</strong>France is the epicentre of European sovereign stress. At 156bp vs Bund, the market is pricing meaningful fiscal risk — not crisis, but structural repricing. Italy is ironically more stable (Meloni delivering vs Barnier paralysed). UK Gilts at 4.52% reflect BoE's constrained cutting cycle and Reeves' budget spending pressures. Avoid French OATs; hold Bunds as the safe-haven alternative within Europe.</div>
+
+  <div class="section-hd"><h2>Credit Markets</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Instrument</th>
+        <th class="r">Level</th>
+        <th class="r">Chg 1M</th>
+        <th>Signal</th>
+        <th>Notes</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>US HY OAS (CDX HY)</td><td class="r mono-cell">330bp</td><td class="r mono-cell g-txt">−8bp</td><td><span class="badge g">Gate open</span></td><td>Well below 376bp trigger — risk-on authorised</td></tr>
+        <tr><td>US IG OAS (CDX IG)</td><td class="r mono-cell">82bp</td><td class="r mono-cell g-txt">−3bp</td><td><span class="badge g">Healthy</span></td><td>Near cycle tights; solid corporate balance sheets</td></tr>
+        <tr><td>EUR HY OAS</td><td class="r mono-cell">385bp</td><td class="r mono-cell r-txt">+22bp</td><td><span class="badge y">Widening</span></td><td>France contagion spillover to European credit</td></tr>
+        <tr><td>LSTA Leveraged Loan</td><td class="r mono-cell">490bp</td><td class="r mono-cell y-txt">+5bp</td><td><span class="badge b">Neutral</span></td><td>Floating rate — benefits from hold environment</td></tr>
+        <tr><td>CMBS BBB</td><td class="r mono-cell">320bp</td><td class="r mono-cell y-txt">+12bp</td><td><span class="badge y">Watch</span></td><td>Office stress ongoing; multifamily stable</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tldr"><strong>TL;DR — Credit</strong>US credit is healthy — both HY and IG spreads are benign and the economic expansion is reflected in tight pricing. The gate is open (HY OAS 330bp vs 376bp threshold). European credit is picking up France-related stress — EUR HY widening is a leading indicator of further OAT spread widening. CMBS: office sector stress is priced; multifamily and industrial are fine.</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: WORLD
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="world">
+  <div class="aop">
+    <div class="aop-label">Answer on the Page · World</div>
+    <div class="aop-title">Extreme divergence: India accelerating, China stimulating, Europe fracturing, Gulf compounding wealth</div>
+    <div class="aop-body">
+      The global economy has never been more synchronised in its divergence. India at 7.4% GDP growth is the world's fastest large economy, capturing manufacturing FDI from China de-risking, with strong domestic consumption and a pro-investment government. China is deploying a ¥10T fiscal stimulus package — the largest since 2008 — but structural headwinds (property sector, demographics, geopolitical discount) cap the upside. Europe is fracturing: Germany in technical recession, France in political crisis, UK constrained by a 4.52% gilt yield. The Gulf (UAE, Saudi Arabia) is converting hydrocarbon windfalls into permanent capital through sovereign wealth funds — PIF crossed $925bn AUM. Australia is China-exposed and struggling. Japan is the most interesting macro trade: BoJ is finally normalising rates, YCC is gone, and the yen carry unwind is a dormant risk.
+    </div>
+    <div class="aop-pills">
+      <span class="aop-pill g">India: strong buy</span>
+      <span class="aop-pill y">China: stimulus watch</span>
+      <span class="aop-pill r">Europe: underweight</span>
+      <span class="aop-pill g">Gulf: allocate</span>
+      <span class="aop-pill r">Australia: caution</span>
+      <span class="aop-pill y">Japan: interesting</span>
+    </div>
+  </div>
+
+  <div class="section-hd"><h2>Asia-Pacific</h2></div>
+  <div class="country-grid">
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇮🇳</span> India</div>
+        <span class="badge g">Outperforming</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">India is the world's growth engine. GDP at 7.4% leads all major economies. Manufacturing FDI is surging as global supply chains de-risk from China — Apple, Samsung, and defence OEMs all expanding production in Gujarat and Tamil Nadu. The Modi government's infrastructure push (PM Gati Shakti) is driving capex. The rupee is stable. Retail inflation at 4.5% has allowed RBI room; the equity market (Nifty +14% YTD) reflects genuine earnings growth, not multiple expansion alone. This is the highest-conviction long in the global EM universe.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot g"></div>7.4%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI Inflation</div><div class="kpi-val"><div class="dot g"></div>4.5%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">RBI Rate</div><div class="kpi-val"><div class="dot y"></div>6.25%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Nifty YTD</div><div class="kpi-val"><div class="dot g"></div>+14%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">INR/USD</div><div class="kpi-val"><div class="dot g"></div>83.4</div></div>
+          <div class="kpi-cell"><div class="kpi-label">FDI Flows</div><div class="kpi-val"><div class="dot g"></div>+28%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">India is in a rare convergence of strong fundamentals: 7.4% growth, controlled inflation, stable currency, and a pro-business government mid-term.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">FDI from China-exit strategy; domestic consumption boom (400M middle class); infrastructure supercycle; demographics (median age 28).</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Overweight India via INDA or direct ADR exposure (INFY, HDFCB). Avoid overconcentration in IT services (AI headwind). Focus on domestic consumption and manufacturing.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇨🇳</span> China</div>
+        <span class="badge y">Stimulus Mode</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">China deployed its largest fiscal stimulus since 2008 in October — ¥10T in local government debt refinancing and housing support. The property sector remains the core problem: new home sales −35% YoY, Evergrande/Country Garden legacy defaults still unwinding. PBOC cut RRR by 50bp. Consumer confidence is recovering slowly. The geopolitical risk premium (Taiwan, US tariff escalation risk under new Congress dynamics) keeps international capital at a 20-30% discount to intrinsic value. This is a trade, not an investment.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot y"></div>4.8%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI</div><div class="kpi-val"><div class="dot r"></div>0.2%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">PBOC Rate</div><div class="kpi-val"><div class="dot g"></div>3.10%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CSI 300 YTD</div><div class="kpi-val"><div class="dot y"></div>+8%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">USD/CNY</div><div class="kpi-val"><div class="dot y"></div>7.14</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Property Sales</div><div class="kpi-val"><div class="dot r"></div>−35%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">China is in deflation territory (CPI 0.2%), deploying massive fiscal stimulus to escape a Japan-style lost decade. The property bust is the dominant macro force.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">¥10T stimulus is real and large (5-6% of GDP). But structural headwinds — demographics, property debt, geopolitical discount — absorb much of the fiscal impulse.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Tactical long (3-6 month) on stimulus catalyst. Preferred vehicles: 3067.HK (Hang Seng Tech ETF — WATCH hard stop), FXI. Not a structural overweight. Exit on geopolitical escalation headlines.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇯🇵</span> Japan</div>
+        <span class="badge y">Policy Transition</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">Japan is the most interesting macro story globally. The Bank of Japan finally exited negative rates in March 2025 and YCC is gone. The 10Y JGB is at 1.05% — a 15-year high. This matters for US rates: Japan holds $1.1T in USTs and as JGB yields rise, the carry incentive to hold USTs diminishes. The Nikkei (38,400) is up 12% YTD on earnings re-ratings from a weaker yen and corporate governance reforms. The yen carry unwind remains a dormant tail risk — if USD/JPY breaks below 145, global risk-off is inevitable.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot y"></div>1.8%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI</div><div class="kpi-val"><div class="dot y"></div>2.5%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">BoJ Rate</div><div class="kpi-val"><div class="dot y"></div>0.25%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Nikkei YTD</div><div class="kpi-val"><div class="dot g"></div>+12%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">USD/JPY</div><div class="kpi-val"><div class="dot y"></div>151.4</div></div>
+          <div class="kpi-cell"><div class="kpi-label">JGB 10Y</div><div class="kpi-val"><div class="dot r"></div>1.05%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Japan is normalising monetary policy for the first time in 25 years. BoJ rate at 0.25% with more hikes expected.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Structural: rising JGB yields = rising cost of carry for yen-funded global trades. $4T+ in yen carry positions globally. An unwind event would be August 2024 (VIX 65) on steroids.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Long Nikkei via EWJ (earnings-driven, not carry). Hedge USD/JPY tail risk with put spreads below 148. Watch 1.25% on JGB 10Y as the carry unwind trigger level.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇦🇺</span> Australia</div>
+        <span class="badge r">China-Exposed</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">Australia is caught in a commodity price squeeze and China slowdown. GDP at 1.1% is barely above stall speed. Iron ore fell 18% YoY as China's property sector — the primary iron ore end-use — contracts. The RBA is at 4.35%, constrained from cutting by sticky services inflation. Housing, the great Australian store of wealth, is +3.2% YoY — resilient but slowing. The AUD at 0.655 is a commodity currency under pressure. The China fiscal stimulus is the key catalyst to watch — a property recovery in China would immediately reprice Australian iron ore and BHP/RIO.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot r"></div>1.1%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Iron Ore YoY</div><div class="kpi-val"><div class="dot r"></div>−18%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">RBA Rate</div><div class="kpi-val"><div class="dot y"></div>4.35%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">AUD/USD</div><div class="kpi-val"><div class="dot y"></div>0.655</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Unemployment</div><div class="kpi-val"><div class="dot g"></div>4.1%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Housing YoY</div><div class="kpi-val"><div class="dot y"></div>+3.2%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Australia is a commodity export economy — iron ore is 30%+ of exports. China's property slump has directly hit the terms of trade.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Iron ore at ~$95/t vs $130/t peak. If China stimulus stabilises property sector, iron ore recovers to $110-120/t and AUD follows. This is the key optionality.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Underweight ASX. Opportunistic long on China stimulus confirmation via BHP or RIO (US-listed). AUD put spreads as China-slowdown hedge.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-hd"><h2>Europe</h2></div>
+  <div class="country-grid">
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇩🇪</span> Germany</div>
+        <span class="badge r">Recession</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">Germany is in its second consecutive year of GDP contraction — a technical recession and structural reckoning. The industrial model built on cheap Russian gas and China export demand is broken. Auto sector is in secular decline (EV transition, Chinese competition). The constitutional debt brake prevents fiscal stimulus. Coalition politics are paralysed. This is a structural problem, not a cyclical downturn, and cannot be fixed by ECB rate cuts alone.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot r"></div>−0.3%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI</div><div class="kpi-val"><div class="dot y"></div>2.8%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Bund 10Y</div><div class="kpi-val"><div class="dot g"></div>2.49%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">DAX YTD</div><div class="kpi-val"><div class="dot y"></div>+5%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Unemployment</div><div class="kpi-val"><div class="dot y"></div>5.9%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">IFO Index</div><div class="kpi-val"><div class="dot r"></div>86.1</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Germany's export-led growth model is broken. Energy cost advantage (cheap Russian gas) is gone; China export demand is structurally lower.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Auto sector −15% output YoY. BASF, Thyssenkrupp announcing mass restructuring. The "German Mittelstand" (SME backbone) energy bills rose 3-4× post-2022 and many have not recovered.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Underweight DAX. Hold Bunds for duration-free safe-haven. Avoid German exporters (auto, industrials). ECB cuts (expected 25bp Dec) are priced.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇫🇷</span> France</div>
+        <span class="badge r">Fiscal Crisis</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">France is the eurozone's current acute risk. The OAT-Bund spread at 156bp reflects political deadlock: Barnier's minority government cannot pass its austerity budget through a National Assembly where the left and far-right have an anti-austerity majority. A no-confidence vote is likely before year-end. If Barnier falls, France faces either a caretaker government (can't pass budget → automatic rollover of 2024 budget → missing EU fiscal targets) or early elections (which polls show would produce another hung parliament). This is a fundamental problem: France cannot consolidate its 6.1% deficit without political consensus it currently lacks.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot y"></div>1.1%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Deficit/GDP</div><div class="kpi-val"><div class="dot r"></div>6.1%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">OAT-Bund</div><div class="kpi-val"><div class="dot r"></div>156bp</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CAC 40 YTD</div><div class="kpi-val"><div class="dot r"></div>−4%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Unemployment</div><div class="kpi-val"><div class="dot y"></div>7.3%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Debt/GDP</div><div class="kpi-val"><div class="dot r"></div>112%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">France has a structural fiscal problem — 6.1% deficit — and a political problem — it cannot form a majority to fix it. The combination is what markets are pricing.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">At 156bp, France is approaching levels that historically trigger ECB intervention. TPI (Transmission Protection Instrument) exists but Lagarde faces a dilemma: activating TPI rewards fiscal slippage. This is a credibility crisis as much as a financial one.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Avoid French OATs. Avoid CAC 40 (heavily weighted to luxury/banks with France-specific risk). Sell EUR vs USD on political escalation. Watch 170bp — at that level, ECB TPI discussion accelerates.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇬🇧</span> United Kingdom</div>
+        <span class="badge y">Constrained</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">The UK is in a fiscal bind of its own making. Reeves' October budget added £70bn in annual spending, funded partly by NIC increases on employers — an immediate headwind to hiring. The gilt market responded: 10Y at 4.52%, 30Y at 4.99%. The BoE is cutting (base rate at 4.75%) but slowly, constrained by 4.3% core CPI and the government's fiscal expansion. The UK is in a phase of muddling through — not crisis (the OBR signed off on the numbers) but not growth either. GDP at 1.0% is below potential.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot y"></div>1.0%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI (Core)</div><div class="kpi-val"><div class="dot r"></div>4.3%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">BoE Rate</div><div class="kpi-val"><div class="dot y"></div>4.75%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">FTSE 100 YTD</div><div class="kpi-val"><div class="dot y"></div>+6%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">GBP/USD</div><div class="kpi-val"><div class="dot y"></div>1.265</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Gilt 10Y</div><div class="kpi-val"><div class="dot r"></div>4.52%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">UK is in a fiscal expansion + monetary tightening squeeze. Reeves spent; BoE can't cut fast because core CPI at 4.3% is too hot.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">NIC hikes are supply-side negative — higher labour costs reduce hiring. FTSE 100 (globally-exposed: oil, mining, pharma) outperforms FTSE 250 (UK domestic) for this reason.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Own FTSE 100 for commodity/energy global exposure. Avoid FTSE 250. UK gilts at 4.52% are interesting if BoE cuts materially — but wait for core CPI to fall below 3.5%.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-hd"><h2>Americas, Canada &amp; EM</h2></div>
+  <div class="country-grid">
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇧🇷</span> Brazil</div>
+        <span class="badge r">Fiscal Stress</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">Brazil is running a 7.4% deficit-to-GDP under Lula's social spending agenda — worse than France — while the BCB has been forced to hike rates back to 11.25% to defend the currency. The BRL has weakened 18% YTD vs USD despite this. Commodity fundamentals (iron ore, soybeans, oil) are Brazil's natural strength, but institutional credibility erosion overrides them for portfolio investors. GDP at 2.9% looks reasonable until you realise it's driven by government consumption, not private investment. The Bovespa in USD terms is −8% YTD.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot y"></div>2.9%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI (IPCA)</div><div class="kpi-val"><div class="dot r"></div>5.2%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Selic Rate</div><div class="kpi-val"><div class="dot r"></div>11.25%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Bovespa (USD)</div><div class="kpi-val"><div class="dot r"></div>−8%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">BRL/USD</div><div class="kpi-val"><div class="dot r"></div>5.68</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Deficit/GDP</div><div class="kpi-val"><div class="dot r"></div>7.4%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Brazil faces fiscal dominance: spending is structurally embedded, forcing BCB to keep rates high, crowding out private investment and crushing the BRL.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Lula's social transfer programmes (Bolsa Família expansion) are constitutional entitlements that Congress won't cut. BRL weakness is the market's verdict on credibility.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Avoid BRL-denominated assets. Commodity optionality via Petrobras (PBR) for oil yield only. MELI exposure to Brazil is a headwind — monitor. Selic at 11.25% offers carry but currency risk negates it unhedged.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇨🇦</span> Canada</div>
+        <span class="badge y">Rate-Cutting</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">Canada is cutting rates aggressively — BoC at 3.75% is now 125bp below the Fed — because its housing and consumer sector are far more rate-sensitive than the US. Canadian households have debt-to-income at record highs; the housing correction (−10% from peak in major cities) is a wealth effect headwind. Immigration at 3% of population per year is simultaneously the demand driver keeping housing from collapsing and the inflation source keeping BCB cautious. TSX is +8% in CAD but flat in USD as the loonie weakens.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot y"></div>1.5%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI</div><div class="kpi-val"><div class="dot y"></div>2.3%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">BoC Rate</div><div class="kpi-val"><div class="dot y"></div>3.75%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">TSX YTD</div><div class="kpi-val"><div class="dot y"></div>+8% CAD</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CAD/USD</div><div class="kpi-val"><div class="dot r"></div>0.730</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Housing YoY</div><div class="kpi-val"><div class="dot r"></div>−10%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Canada cut rates faster than the US because its housing market is a leveraged bet on low rates — 72% loan-to-income average mortgage vs 55% in the US.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">BoC cutting faster than Fed = CAD weakening vs USD. TSX (energy/financials weighted) benefits from commodity tailwinds. Canadian banks (RY, TD) at 11-12× P/E with 4-5% yield are interesting.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">TSX in USD-hedged form. Canadian banks as dividend plays. Avoid unhedged CAD exposure. Watch US tariff risk on Canada — a 10% tariff would hit CAD hard and is a tail risk.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇸🇬</span> Singapore</div>
+        <span class="badge g">Hub Premium</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">Singapore is quietly one of the world's best-managed economies and is commanding an expanding premium as a global financial hub and AI infrastructure centre. GDP at 4.1% outperforms all G7 economies. MAS runs monetary policy via SGD exchange rate appreciation (not interest rates), making SGD assets attractive as the currency strengthens. Singapore is capturing capital from Hong Kong's regulatory uncertainty, mainland China de-risking, and Western interest in ASEAN exposure. Temasek ($380bn AUM) and GIC ($770bn) are deploying into AI, healthcare, and infrastructure at scale.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot g"></div>4.1%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI</div><div class="kpi-val"><div class="dot g"></div>2.1%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">MAS Policy</div><div class="kpi-val"><div class="dot g"></div>SGD apprec.</div></div>
+          <div class="kpi-cell"><div class="kpi-label">STI YTD</div><div class="kpi-val"><div class="dot g"></div>+11%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">USD/SGD</div><div class="kpi-val"><div class="dot g"></div>1.330</div></div>
+          <div class="kpi-cell"><div class="kpi-label">FDI Inflows</div><div class="kpi-val"><div class="dot g"></div>+18%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Singapore uses FX (SGD appreciation) rather than interest rates as its monetary tool — this is unique globally. It makes SGD assets naturally attractive as the currency rises.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">AI datacentre hub (Google, Microsoft, AWS expanding); wealth management centre as HK capital migrates; ASEAN 700M consumer gateway. Zero debt, fiscal surplus, AAA-rated.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">DBS, OCBC at 10-11× P/E with 5-6% yield and SGD appreciation tailwind — exceptional value. EWS ETF for broader exposure. Underappreciated vs EM peers.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-hd"><h2>Southern Europe &amp; Russia</h2></div>
+  <div class="country-grid">
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇬🇷</span> Greece</div>
+        <span class="badge g">Redemption Story</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">Greece is one of the most remarkable turnaround stories of the 2020s. After three bailouts and near-Grexit, Greece in 2026 is running a primary surplus, has regained investment-grade status from all major agencies, and is growing at 2.4% — well above the eurozone average. Tourism at €22bn revenue is at all-time highs. The banking sector has cleaned up NPLs from 45% (2017) to 7%. GREK (US-listed ETF) is +10.3% YTD — the best-performing European country ETF. The GGB-Bund spread at 92bp is tighter than Spain — a remarkable inversion from the crisis years.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot g"></div>2.4%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI</div><div class="kpi-val"><div class="dot y"></div>3.1%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">GGB-Bund</div><div class="kpi-val"><div class="dot g"></div>+92bp</div></div>
+          <div class="kpi-cell"><div class="kpi-label">GREK YTD</div><div class="kpi-val"><div class="dot g"></div>+10.3%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Budget</div><div class="kpi-val"><div class="dot g"></div>Surplus</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Rating</div><div class="kpi-val"><div class="dot g"></div>BBB</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Greece has completed its restructuring — from 25% unemployment and near-default (2013) to fiscal surplus and investment-grade (2026). The story is real and priced in only partially.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Tourism at all-time highs; banking NPL cleanup done; reform credibility rewarded. GGB-Bund at 92bp vs 600bp+ in 2015 crisis. European Recovery Fund tailwind continues through 2027.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">GREK is a live position (+10.3%) — thesis completely intact. Hold and consider adding. Risk: French contagion to peripheral European spreads. Watch OAT-Bund — if above 180bp, GGB may widen sympathetically.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇮🇹</span> Italy</div>
+        <span class="badge y">Stable, Watched</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">Italy, historically the eurozone's default crisis trigger, is ironically more stable than France in 2026. Meloni's government has delivered fiscal consolidation (deficit down from 7.4% to 4.5% of GDP) and maintained ECB TPI eligibility — the critical backstop. The BTP-Bund spread at 125bp is elevated but stable. The main risk: contagion from France. At OAT-Bund 156bp, BTP historically follows with a 0.72 correlation. Italy's economy grows 0.9% — above Germany but behind Spain (2.1%) and Greece (2.4%).</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot y"></div>0.9%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI</div><div class="kpi-val"><div class="dot g"></div>1.8%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">BTP-Bund</div><div class="kpi-val"><div class="dot y"></div>+125bp</div></div>
+          <div class="kpi-cell"><div class="kpi-label">FTSE MIB YTD</div><div class="kpi-val"><div class="dot y"></div>+4%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Deficit/GDP</div><div class="kpi-val"><div class="dot y"></div>4.5%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Debt/GDP</div><div class="kpi-val"><div class="dot r"></div>137%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Italy is Europe's third-largest economy (€2.1T GDP) with 137% debt/GDP — high but stable under TPI backstop and Meloni's compliance with EU fiscal rules.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Meloni delivering vs Barnier paralysed is the market narrative. TPI credible for Italy. Key risk: France contagion widens BTP-Bund to 160bp+ — correlation historically tight.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Neutral Italy. BTP-Bund at 125bp acceptable; act at 160bp. Italian banks (Intesa, Unicredit) at 8-10% dividend yield but carry sovereign risk. Watch OAT-BTP correlation during France stress.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇷🇺</span> Russia</div>
+        <span class="badge r">Uninvestable</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">Russia is a war economy running at unsustainable intensity. GDP growth of 3.6% is a statistical artefact of defence spending (25% of federal budget) — not genuine economic development. Inflation at 8.9% forced CBR to hike to 21% — a 23-year high. The ruble is a managed, non-freely-tradeable currency. Shadow fleet oil exports continue with India and China absorbing Russian crude at a $15-20/barrel discount to Brent. For Western portfolios: uninvestable. The macro relevance: a peace resolution would reprice European energy markets, potentially compress European sovereign risk premia, and rally EUR.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth*</div><div class="kpi-val"><div class="dot y"></div>3.6%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CPI</div><div class="kpi-val"><div class="dot r"></div>8.9%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">CBR Rate</div><div class="kpi-val"><div class="dot r"></div>21.0%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">MOEX YTD</div><div class="kpi-val"><div class="dot r"></div>−12%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">USD/RUB</div><div class="kpi-val"><div class="dot r"></div>97.4</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Oil Discount</div><div class="kpi-val"><div class="dot r"></div>−$18/bbl</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Russia is a sanctions-isolated war economy. 21% interest rates reflect 8.9% inflation and currency defence. GDP growth is entirely defence-spending driven — not investable signal.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">The only macro relevance for external portfolios is the peace tail risk: resolution → Brent repricing, European gas normalisation, EUR rally, European sovereign spread compression.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Uninvestable for Western portfolios. Monitor for peace signals as a macro event: resolution would reprice European energy and compression plays. Hedge via EUR/USD calls on peace speculation.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-hd"><h2>Gulf &amp; Middle East</h2></div>
+  <div class="country-grid">
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇦🇪</span> UAE / Gulf</div>
+        <span class="badge g">Compounding</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">The UAE is converting oil windfalls into permanent capital at an extraordinary rate. ADIA, Mubadala, and ADQ collectively manage over $1.5T and are deploying into global infrastructure, tech, and alternatives at scale. The Dubai real estate market is +22% YoY — driven by HNWI inflows from Russia, India, and Europe seeking a stable, low-tax jurisdiction. GDP at 4.2% outpaces all G7 economies. OPEC+ discipline is holding Brent above $80, keeping the fiscal position in solid surplus.</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot g"></div>4.2%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Brent</div><div class="kpi-val"><div class="dot y"></div>$88</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Dubai RE YoY</div><div class="kpi-val"><div class="dot g"></div>+22%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">OPEC Disc.</div><div class="kpi-val"><div class="dot g"></div>High</div></div>
+          <div class="kpi-cell"><div class="kpi-label">SWF Flows</div><div class="kpi-val"><div class="dot g"></div>+$180bn</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Fiscal Bal.</div><div class="kpi-val"><div class="dot g"></div>+4.1%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">UAE is the Gulf's financial hub — HNWI magnet, SWF engine, and gateway to India/Africa growth corridors.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Tax arbitrage (0% personal income tax), stable AED peg, visa liberalisation, and genuine safety attracting long-term capital from Europe and Asia. This is secular, not cyclical.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Co-invest alongside SWFs (ADIA, Mubadala co-investments). UAE-listed banks (ENBD, FAB) for local yield. Watch Brent: below $70 is the fiscal stress threshold for the Gulf peg.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="country-card">
+      <div class="country-hd">
+        <div class="country-name"><span class="flag">🇸🇦</span> Saudi Arabia</div>
+        <span class="badge g">PIF Deployment</span>
+      </div>
+      <div class="country-body">
+        <p class="country-narrative">Saudi Arabia is running the world's most ambitious sovereign transformation. Vision 2030 has moved from aspiration to execution: NEOM construction underway, Saudi Aramco diversifying downstream, and the PIF (Public Investment Fund) has surpassed $925bn AUM — set to reach $1T+ by 2025. The key risk: Brent crude at $83 is below the $96 fiscal breakeven for the full Vision 2030 spending programme. MbS is running a managed drawdown of reserves to maintain the programme, betting on oil prices recovering. The Tadawul has outperformed most EM markets YTD (+6%).</p>
+        <div class="kpi-grid">
+          <div class="kpi-cell"><div class="kpi-label">GDP Growth</div><div class="kpi-val"><div class="dot g"></div>3.8%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Brent vs BE</div><div class="kpi-val"><div class="dot y"></div>$83/$96</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Fiscal Bal.</div><div class="kpi-val"><div class="dot y"></div>−3.2%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">PIF AUM</div><div class="kpi-val"><div class="dot g"></div>$925bn</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Unemployment</div><div class="kpi-val"><div class="dot g"></div>3.5%</div></div>
+          <div class="kpi-cell"><div class="kpi-label">Tadawul YTD</div><div class="kpi-val"><div class="dot g"></div>+6%</div></div>
+        </div>
+        <div class="ind-detail">
+          <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Saudi Arabia is running Vision 2030 — a $3T+ economic transformation funded by oil revenues and PIF deployment.</span></div>
+          <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Fiscal breakeven at $96 vs Brent $83 means deficit spending. Reserves ($420bn+) cover 7+ years of this, but it's a reason to watch oil price. OPEC+ production discipline is a Saudi priority.</span></div>
+          <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Tactically long Tadawul via KSA ETF. PIF co-invest pipeline increasingly global (UK infra, US real estate). Watch Brent: below $70 triggers fiscal stress. Aramco dividend ($75bn/year to PIF) is key buffer.</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: MARKETS
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="markets">
+  <div class="aop">
+    <div class="aop-label">Answer on the Page · Markets</div>
+    <div class="aop-title">Rotation from growth to value in full swing — technology losing ground as rates bite, healthcare and industrials taking leadership</div>
+    <div class="aop-body">
+      The most important market story of 2026 is not the level of the S&amp;P (up ~6% YTD) but its composition: 7 of 11 GICS sectors have flipped leadership. Technology peaked in February (AI capex cycle digestion, margin pressure) and has underperformed by 23 percentage points vs Healthcare YTD. Real money is flowing into KRE (regional banks, up 18% on the hold-for-longer dynamic), healthcare, and industrials. REITs are recovering as 10Y yield anxiety stabilises. VIX at 17 is complacent but not dangerously so — there is no froth signal in vol markets. The key asset class call: equities > credit > duration. Within equities: value/cyclical > growth/tech. Within credit: US IG &gt; EUR HY (France contagion). Gold near all-time highs reflects de-dollarisation + central bank buying. Silver breaking out confirms reflation.</div>
+    <div class="aop-pills">
+      <span class="aop-pill y">Tech: underweight</span>
+      <span class="aop-pill g">Healthcare: overweight</span>
+      <span class="aop-pill g">Industrials: overweight</span>
+      <span class="aop-pill g">Banks: buy</span>
+      <span class="aop-pill y">REITs: recovering</span>
+      <span class="aop-pill g">Gold/Silver: long</span>
+    </div>
+  </div>
+
+  <div class="section-hd"><h2>Sector Rotation — YTD Performance</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Sector</th>
+        <th>ETF</th>
+        <th class="r">YTD Return</th>
+        <th class="r">vs S&amp;P</th>
+        <th>Signal</th>
+        <th>Key Driver</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Health Care</td><td class="mono-cell">XLV</td><td class="r mono-cell g-txt">+18.4%</td><td class="r mono-cell g-txt">+12.3%</td><td><span class="badge g">Overweight</span></td><td>GLP-1 drugs, aging demographic, M&amp;A pipeline</td></tr>
+        <tr><td>Industrials</td><td class="mono-cell">XLI</td><td class="r mono-cell g-txt">+15.2%</td><td class="r mono-cell g-txt">+9.1%</td><td><span class="badge g">Overweight</span></td><td>Reshoring capex, defence procurement, IRA</td></tr>
+        <tr><td>Financials</td><td class="mono-cell">XLF</td><td class="r mono-cell g-txt">+14.1%</td><td class="r mono-cell g-txt">+8.0%</td><td><span class="badge g">Overweight</span></td><td>NIM expansion in hold-for-longer environment</td></tr>
+        <tr><td>Energy</td><td class="mono-cell">XLE</td><td class="r mono-cell g-txt">+9.3%</td><td class="r mono-cell g-txt">+3.2%</td><td><span class="badge b">Neutral</span></td><td>Brent $83–88; dividend yield support; reduced to neutral</td></tr>
+        <tr><td>Materials</td><td class="mono-cell">XLB</td><td class="r mono-cell y-txt">+6.8%</td><td class="r mono-cell y-txt">+0.7%</td><td><span class="badge b">Neutral</span></td><td>China stimulus optionality; copper +12% YTD</td></tr>
+        <tr><td>S&amp;P 500</td><td class="mono-cell">SPY</td><td class="r mono-cell">+6.1%</td><td class="r mono-cell">—</td><td><span class="badge b">Benchmark</span></td><td></td></tr>
+        <tr><td>Utilities</td><td class="mono-cell">XLU</td><td class="r mono-cell y-txt">+5.4%</td><td class="r mono-cell y-txt">−0.7%</td><td><span class="badge b">Neutral</span></td><td>AI power demand; rate-sensitive headwind</td></tr>
+        <tr><td>Consumer Staples</td><td class="mono-cell">XLP</td><td class="r mono-cell y-txt">+4.2%</td><td class="r mono-cell r-txt">−1.9%</td><td><span class="badge b">Neutral</span></td><td>Defensive positioning; volume growth modest</td></tr>
+        <tr><td>Real Estate</td><td class="mono-cell">XLRE</td><td class="r mono-cell y-txt">+2.1%</td><td class="r mono-cell r-txt">−4.0%</td><td><span class="badge y">Recovering</span></td><td>Rate peak thesis; multifamily demand structural</td></tr>
+        <tr><td>Cons. Discretionary</td><td class="mono-cell">XLY</td><td class="r mono-cell r-txt">−2.4%</td><td class="r mono-cell r-txt">−8.5%</td><td><span class="badge y">Selective</span></td><td>High-income consumer resilient; low-income stressed</td></tr>
+        <tr><td>Communication Svcs</td><td class="mono-cell">XLC</td><td class="r mono-cell r-txt">−5.8%</td><td class="r mono-cell r-txt">−11.9%</td><td><span class="badge r">Avoid</span></td><td>Ad market normalising; streaming wars margin pressure</td></tr>
+        <tr><td>Technology</td><td class="mono-cell">XLK</td><td class="r mono-cell r-txt">−11.5%</td><td class="r mono-cell r-txt">−17.6%</td><td><span class="badge r">Underweight</span></td><td>AI capex digestion; multiple compression at 5% 10Y</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tldr"><strong>TL;DR — Sector Rotation</strong>This is a genuine regime change: technology has gone from 32% of S&amp;P to 26% YTD as rates bite and AI hyperscaler capex spending is questioned on ROI. Healthcare is the new leadership — GLP-1 drugs (Novo, Eli Lilly) are creating a pharmaceutical supercycle. Industrials are second: reshoring capex is multi-year. Financials benefit from hold-for-longer (wider NIMs). The bottom quartile (XLK, XLC, XLY domestic) faces structural headwinds from both rates and earnings disappointment.</div>
+
+  <div class="section-hd"><h2>Money Flows — Where Real Capital is Moving</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Instrument</th>
+        <th class="r">Price</th>
+        <th class="r">YTD</th>
+        <th class="r">Fund Flows 3M</th>
+        <th>Signal</th>
+        <th>Thesis</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>SPDR Regional Banks (KRE)</td><td class="r mono-cell">$68.40</td><td class="r mono-cell g-txt">+18%</td><td class="r mono-cell g-txt">+$2.1bn</td><td><span class="badge g">Buy</span></td><td>NIM expansion in hold environment; deposit repricing done</td></tr>
+        <tr><td>iShares REIT (IYR/VNQ)</td><td class="r mono-cell">$97.20</td><td class="r mono-cell y-txt">+4%</td><td class="r mono-cell g-txt">+$850m</td><td><span class="badge y">Accumulate</span></td><td>Rate peak thesis; multifamily and industrial strong</td></tr>
+        <tr><td>SPDR Homebuilders (XHB)</td><td class="r mono-cell">$112.80</td><td class="r mono-cell g-txt">+11%</td><td class="r mono-cell g-txt">+$1.4bn</td><td><span class="badge g">Buy</span></td><td>Housing shortage structural; builders passing costs</td></tr>
+        <tr><td>SPDR Retail (XRT)</td><td class="r mono-cell">$74.30</td><td class="r mono-cell r-txt">−6%</td><td class="r mono-cell r-txt">−$620m</td><td><span class="badge r">Underweight</span></td><td>Low-income consumer under stress from student loans + rates</td></tr>
+        <tr><td>iShares Healthcare (IHI)</td><td class="r mono-cell">$58.90</td><td class="r mono-cell g-txt">+22%</td><td class="r mono-cell g-txt">+$3.2bn</td><td><span class="badge g">Overweight</span></td><td>GLP-1 supercycle; medical device demand post-pandemic</td></tr>
+        <tr><td>iShares Semi (SOXX)</td><td class="r mono-cell">$215.40</td><td class="r mono-cell r-txt">−14%</td><td class="r mono-cell r-txt">−$1.8bn</td><td><span class="badge y">Watch</span></td><td>Inventory correction done; AI tailwind structural but priced</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tldr"><strong>TL;DR — Money Flows</strong>Real money is rotating into rate-beneficiary sectors: KRE (+$2.1bn inflows) benefits from "higher for longer." Healthcare dominates with $3.2bn into IHI. Homebuilders are counter-intuitive — high mortgage rates hurt buyers but not builders (locked-in backlog, pricing power). Retail (XRT) is under structural pressure from the low-income consumer squeeze. Semiconductors: AI demand is real but the multiple was pricing perfection at 30x; the correction has reset expectations.</div>
+
+  <div class="section-hd"><h2>Asset Class View</h2></div>
+  <div class="asset-grid">
+    <div class="asset-card">
+      <div class="asset-label">S&amp;P 500</div>
+      <div class="asset-val">5,718</div>
+      <div class="asset-chg g-txt">+6.1% YTD</div>
+      <div class="asset-note">P/E 19.5× — fair at 5% rates. Rotation story; not a multiple expansion story. Earnings +8% expected 2027.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-label">Gold (XAU/USD)</div>
+      <div class="asset-val">$2,710</div>
+      <div class="asset-chg g-txt">+28% YTD</div>
+      <div class="asset-note">Central bank buying (1,100t demand), de-dollarisation flows. All-time high. Hold: structural bid from EM CBs.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-label">Silver (XAG/USD)</div>
+      <div class="asset-val">$33.20</div>
+      <div class="asset-chg g-txt">+34% YTD</div>
+      <div class="asset-note">Solar panel demand structural. Industrial + monetary hybrid. Breaking out above $32 — new position (SLV). Target $40+.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-label">WTI Crude</div>
+      <div class="asset-val">$81.40</div>
+      <div class="asset-chg r-txt">−4% YTD</div>
+      <div class="asset-note">OPEC+ discipline vs weak China demand. $70–90 range. Reduced XLE to neutral — energy no longer a conviction overweight.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-label">Bitcoin (BTC)</div>
+      <div class="asset-val">$68,400</div>
+      <div class="asset-chg g-txt">+42% YTD</div>
+      <div class="asset-note">ETF flows ($18bn into spot BTC ETFs YTD). Halving cycle in effect. Not a core position — monitored.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-label">VIX</div>
+      <div class="asset-val">17.2</div>
+      <div class="asset-chg g-txt">Complacent</div>
+      <div class="asset-note">Below 20 = risk-on. No crash signal. Watch for spike above 25 — that's the entry signal for SPY calls. Currently: sell into vol spikes.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-label">DXY (USD Index)</div>
+      <div class="asset-val">105.8</div>
+      <div class="asset-chg g-txt">+3.4% YTD</div>
+      <div class="asset-note">Fed hold keeps USD supported vs EUR (France risk), JPY (BoJ slow). Dollar strength headwind for EM FX and commodities.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-label">Copper</div>
+      <div class="asset-val">$4.38/lb</div>
+      <div class="asset-chg g-txt">+12% YTD</div>
+      <div class="asset-note">AI datacentre builds, EV infrastructure, energy transition structural demand. China stimulus optionality adds to bull case.</div>
+    </div>
+  </div>
+
+  <div class="section-hd"><h2>Equity Style / Size Matrix</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Style / Size</th>
+        <th class="r">YTD Return</th>
+        <th>Signal</th>
+        <th>Rationale</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Large Cap Value (IVE)</td><td class="r mono-cell g-txt">+11.4%</td><td><span class="badge g">Overweight</span></td><td>Financials, healthcare, industrials — all value. Rate tailwind.</td></tr>
+        <tr><td>Large Cap Growth (IVW)</td><td class="r mono-cell r-txt">−2.1%</td><td><span class="badge r">Underweight</span></td><td>Tech/comms drag. 5% 10Y compresses long-duration earnings.</td></tr>
+        <tr><td>Mid Cap (IJH)</td><td class="r mono-cell y-txt">+5.8%</td><td><span class="badge b">Neutral</span></td><td>Domestic cyclicals — benefits from reshoring but rate-sensitive.</td></tr>
+        <tr><td>Small Cap Value (IJS)</td><td class="r mono-cell g-txt">+9.3%</td><td><span class="badge g">Accumulate</span></td><td>Rate peak trade — small-cap value historically surges early in cutting cycle.</td></tr>
+        <tr><td>Small Cap Growth (IJT)</td><td class="r mono-cell r-txt">−8.2%</td><td><span class="badge r">Avoid</span></td><td>Leveraged growth co's under rate pressure. No earnings cover.</td></tr>
+        <tr><td>International (VXUS)</td><td class="r mono-cell y-txt">+1.2%</td><td><span class="badge y">Selective</span></td><td>India yes, Europe no, Japan selective. EM divergence extreme.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: POSITIONS
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="positions">
+  <div class="aop">
+    <div class="aop-label">Answer on the Page · Positions</div>
+    <div class="aop-title">Portfolio: long quality-growth, adding reflation; watch 3067.HK for hard stop</div>
+    <div class="aop-body">
+      The book reflects the regime: healthcare and industrials as core overweights, silver added for reflation, QRT for smart-money convergence, 3067.HK as China stimulus tactical trade approaching its hard stop. We removed XLE from active overweight (reduced to neutral — energy no longer a conviction call at Brent $83 vs $96 breakeven). ZTS confirmed as a Tier 2 conviction by 13F smart money analysis (ranks second behind ABBV in healthcare additions). The HY OAS gate is open — no forced de-risking required. Total risk posture: constructive, with active hedges via put spreads on XLK and VIX calls above 25.
+    </div>
+    <div class="aop-pills">
+      <span class="aop-pill g">Gate: open</span>
+      <span class="aop-pill g">New: SLV, QRT</span>
+      <span class="aop-pill r">Watch: 3067.HK stop</span>
+      <span class="aop-pill y">Removed: XLE overweight</span>
+    </div>
+  </div>
+
+  <div class="gate-box">
+    <div>
+      <div class="gate-label g">■ CREDIT GATE OPEN</div>
+      <div class="gate-value mono">HY OAS 330bp</div>
+    </div>
+    <div class="gate-desc">330bp vs 376bp threshold. Gate open — full equity exposure authorised. If HY OAS breaks above 376bp: begin systematic de-risking. Watch KRE and XRT as early warning indicators.</div>
+  </div>
+
+  <div class="alert-box warn">
+    <div class="alert-title">📋 Live Portfolio — as of Nov 14, 2026</div>
+    <div class="alert-body">Positions assessed against current macro thesis. <strong>Thesis-aligned</strong> = hold/add. <strong>Off-thesis</strong> = review. <strong>Stop-watch</strong> = decision required. Two entities: US brokerage + AU/IB (Maddie).</div>
+  </div>
+
+  <div class="section-hd"><h2>US Entity — Holdings</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Asset</th><th>Ticker</th><th class="r">Cost</th><th class="r">Value</th><th class="r">P&amp;L</th><th class="r">Rtn</th><th>Fit</th></tr></thead>
+      <tbody>
+        <tr><td>China Tech ETF</td><td class="mono-cell">3067:HKG</td><td class="r mono-cell">$7,768</td><td class="r mono-cell">$5,124</td><td class="r mono-cell r-txt">−$2,644</td><td class="r mono-cell r-txt">−34%</td><td><span class="badge r">🚨 Stop</span></td></tr>
+        <tr><td>Uranium</td><td class="mono-cell">SRUUF</td><td class="r mono-cell">$7,408</td><td class="r mono-cell">$7,332</td><td class="r mono-cell r-txt">−$76</td><td class="r mono-cell r-txt">−1%</td><td><span class="badge y">Consolidate</span></td></tr>
+        <tr><td>Flutter Entertainment</td><td class="mono-cell">FLUT</td><td class="r mono-cell">$4,584</td><td class="r mono-cell">$4,057</td><td class="r mono-cell r-txt">−$527</td><td class="r mono-cell r-txt">−11%</td><td><span class="badge y">Off-thesis</span></td></tr>
+        <tr><td>Greece ETF</td><td class="mono-cell">GREK</td><td class="r mono-cell">$8,072</td><td class="r mono-cell">$8,902</td><td class="r mono-cell g-txt">+$831</td><td class="r mono-cell g-txt">+10%</td><td><span class="badge g">✓ Hold</span></td></tr>
+        <tr><td>Zoetis</td><td class="mono-cell">ZTS</td><td class="r mono-cell">$5,927</td><td class="r mono-cell">$6,538</td><td class="r mono-cell g-txt">+$611</td><td class="r mono-cell g-txt">+10%</td><td><span class="badge g">✓ Add</span></td></tr>
+        <tr><td>Uber</td><td class="mono-cell">UBER</td><td class="r mono-cell">$16,693</td><td class="r mono-cell">$15,680</td><td class="r mono-cell r-txt">−$1,013</td><td class="r mono-cell r-txt">−6%</td><td><span class="badge y">Trim</span></td></tr>
+        <tr><td>Amazon</td><td class="mono-cell">AMZN</td><td class="r mono-cell">$5,331</td><td class="r mono-cell">$5,333</td><td class="r mono-cell">+$2</td><td class="r mono-cell">flat</td><td><span class="badge y">Off-thesis</span></td></tr>
+        <tr><td>MercadoLibre</td><td class="mono-cell">MELI</td><td class="r mono-cell">$9,385</td><td class="r mono-cell">$8,949</td><td class="r mono-cell r-txt">−$436</td><td class="r mono-cell r-txt">−5%</td><td><span class="badge y">Watch</span></td></tr>
+        <tr><td>D1 Capital (PE/VC)</td><td class="mono-cell">D1</td><td class="r mono-cell">$25,000</td><td class="r mono-cell">$26,780</td><td class="r mono-cell g-txt">+$1,780</td><td class="r mono-cell g-txt">+7%</td><td><span class="badge g">Hold</span></td></tr>
+        <tr><td>OpenEvidence</td><td class="mono-cell">OE</td><td class="r mono-cell">$5,000</td><td class="r mono-cell">$5,000</td><td class="r mono-cell">$0</td><td class="r mono-cell">0%</td><td><span class="badge b">Monitor</span></td></tr>
+        <tr><td>QRT</td><td class="mono-cell">QRT</td><td class="r mono-cell">$10,000</td><td class="r mono-cell">$10,000</td><td class="r mono-cell">$0</td><td class="r mono-cell">new</td><td><span class="badge b">New</span></td></tr>
+        <tr><td>Cash</td><td class="mono-cell">—</td><td class="r mono-cell">$12,272</td><td class="r mono-cell">$12,272</td><td class="r mono-cell">—</td><td class="r mono-cell">—</td><td><span class="badge b">Deploy</span></td></tr>
+        <tr style="font-weight:600;border-top:2px solid var(--border)"><td>Total US</td><td></td><td class="r mono-cell">$117,439</td><td class="r mono-cell">$115,967</td><td class="r mono-cell r-txt">−$1,472</td><td class="r mono-cell r-txt">−1.25%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tldr"><strong>Realised +$6,479 · Unrealised −$1,472 · Net P&amp;L +$5,007</strong> — The book has genuine winners (GREK +10%, ZTS +10%, D1 +7%) but is dragged by 3067:HKG (−34%, −$2.6k), UBER oversized at 14% weight, and off-thesis positions (AMZN, FLUT, MELI). Cash of $12k should be redeployed. The collection reflects diverse thesis bets — some aligned, some legacy.</div>
+
+  <div class="section-hd"><h2>AU Entity (Maddie / IB)</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Asset</th><th>Ticker</th><th class="r">Cost</th><th class="r">Value</th><th class="r">P&amp;L</th><th class="r">Rtn</th><th>Fit</th></tr></thead>
+      <tbody>
+        <tr><td>Alderan Resources (silver miner)</td><td class="mono-cell">ASX:AGE</td><td class="r mono-cell">$3,182</td><td class="r mono-cell">$2,031</td><td class="r mono-cell r-txt">−$1,151</td><td class="r mono-cell r-txt">−36%</td><td><span class="badge y">Review</span></td></tr>
+        <tr><td>Sprott Gold+Silver (CEF)</td><td class="mono-cell">CEF</td><td class="r mono-cell">$11,454</td><td class="r mono-cell">$11,046</td><td class="r mono-cell r-txt">−$408</td><td class="r mono-cell r-txt">−4%</td><td><span class="badge y">Timing</span></td></tr>
+        <tr><td>Enovix (battery tech)</td><td class="mono-cell">ENVX</td><td class="r mono-cell">$2,656</td><td class="r mono-cell">$365</td><td class="r mono-cell r-txt">−$2,291</td><td class="r mono-cell r-txt">−86%</td><td><span class="badge r">Exit</span></td></tr>
+        <tr><td>Paladin Energy (uranium)</td><td class="mono-cell">ASX:PDN</td><td class="r mono-cell">$2,241</td><td class="r mono-cell">$4,855</td><td class="r mono-cell g-txt">+$2,614</td><td class="r mono-cell g-txt">+117%</td><td><span class="badge g">✓ Hold</span></td></tr>
+        <tr><td>Uranium Royalty ETF</td><td class="mono-cell">URNM</td><td class="r mono-cell">$1,727</td><td class="r mono-cell">$1,664</td><td class="r mono-cell r-txt">−$63</td><td class="r mono-cell r-txt">−4%</td><td><span class="badge g">✓ Hold</span></td></tr>
+        <tr><td>Vanguard S&amp;P 500</td><td class="mono-cell">VOO</td><td class="r mono-cell">$5,820</td><td class="r mono-cell">$10,401</td><td class="r mono-cell g-txt">+$4,580</td><td class="r mono-cell g-txt">+79%</td><td><span class="badge g">✓ Core</span></td></tr>
+        <tr><td>iShares Silver Trust</td><td class="mono-cell">SLV</td><td class="r mono-cell">$3,450</td><td class="r mono-cell">$3,310</td><td class="r mono-cell r-txt">−$140</td><td class="r mono-cell r-txt">−4%</td><td><span class="badge g">✓ Hold</span></td></tr>
+        <tr style="font-weight:600;border-top:2px solid var(--border)"><td>Total AU</td><td></td><td class="r mono-cell">$41,787</td><td class="r mono-cell">$44,927</td><td class="r mono-cell g-txt">+$3,140</td><td class="r mono-cell g-txt">+7.5%</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tldr"><strong>AU entity +7.5%</strong> — VOO is doing the heavy lifting (+79% on cost, now worth $10.4k from $5.8k). PDN uranium +117% — your best single stock. ENVX (Enovix battery tech) is the problem: −86%, $365 residual on $2,656 cost. Exit for tax-loss harvest and redeploy. AGE (silver miner) underperforming the commodity itself — SLV is the cleaner play.</div>
+
+  <div class="section-hd"><h2>Position Analysis vs Macro Thesis</h2></div>
+  <div class="pos-grid">
+
+    <div class="pos-card">
+      <div class="pos-top"><div class="pos-ticker">3067:HKG</div><span class="badge r">🚨 Stop Watch</span></div>
+      <div class="pos-name">CSOP Hang Seng Tech — Cost $12.19 · Now $8.04 (−34%)</div>
+      <div class="pos-stats">
+        <div class="pos-stat"><div class="pos-stat-label">Unrealised</div><div class="pos-stat-val r-txt">−$2,644</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Qty</div><div class="pos-stat-val">5,000</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Verdict</div><div class="pos-stat-val r-txt">Decide now</div></div>
+      </div>
+      <div class="pos-thesis">Your largest unrealised loss. The China stimulus thesis is real — ¥10T is genuine — but the market disagrees with timing or is pricing escalating geopolitical risk premium. At −34%, the position has broken every technical support level. <strong>Decision required:</strong> If you believe China stimulus re-rates HST within 6 months, set a hard stop at $7.50 and hold. If geopolitical risk (Taiwan, US tariffs) is your concern, exit now — you can re-enter on confirmation. Do not average down under any scenario.</div>
+    </div>
+
+    <div class="pos-card">
+      <div class="pos-top"><div class="pos-ticker">GREK</div><span class="badge g">✓ Thesis-Aligned — Hold</span></div>
+      <div class="pos-name">Global X Greece ETF — +$831 (+10.3%)</div>
+      <div class="pos-stats">
+        <div class="pos-stat"><div class="pos-stat-label">Cost</div><div class="pos-stat-val">$8,072</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">P&amp;L</div><div class="pos-stat-val g-txt">+$831</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Verdict</div><div class="pos-stat-val g-txt">Hold/add</div></div>
+      </div>
+      <div class="pos-thesis">Greece is the best European sovereign story (see World page — budget surplus, investment-grade, 2.4% GDP). The position is working and thesis is completely intact. Risk: French contagion spreading to peripheral European spreads. Watch OAT-Bund — if above 180bp, GGB may widen sympathetically, creating a buying opportunity. This is exactly what the dashboard says to own in Europe.</div>
+    </div>
+
+    <div class="pos-card">
+      <div class="pos-top"><div class="pos-ticker">ZTS</div><span class="badge g">✓ Thesis-Aligned — Add</span></div>
+      <div class="pos-name">Zoetis — +$611 (+10.3%)</div>
+      <div class="pos-stats">
+        <div class="pos-stat"><div class="pos-stat-label">Cost</div><div class="pos-stat-val">$5,927</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">78 shares</div><div class="pos-stat-val">@$75.98</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Verdict</div><div class="pos-stat-val g-txt">Add more</div></div>
+      </div>
+      <div class="pos-thesis">Healthcare is the top-performing sector (XLV +18%) and ZTS is the 13F smart-money #2 conviction pick. Animal health is recession-resistant with 6% annual pricing power. Librela revenue is a commercial blockbuster. This is exactly the regime call. Your position size ($5.9k) is relatively small for a high-conviction name — consider doubling down with cash on hand.</div>
+    </div>
+
+    <div class="pos-card">
+      <div class="pos-top"><div class="pos-ticker">UBER</div><span class="badge y">Oversized — Trim</span></div>
+      <div class="pos-name">Uber — −$1,013 (−6%) · 14% of US entity</div>
+      <div class="pos-stats">
+        <div class="pos-stat"><div class="pos-stat-label">Cost</div><div class="pos-stat-val">$16,693</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Weight</div><div class="pos-stat-val r-txt">14.2%</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Verdict</div><div class="pos-stat-val y-txt">Trim 30-40%</div></div>
+      </div>
+      <div class="pos-thesis">Uber is your largest single position (14% US entity) but off-thesis — consumer discretionary + high-multiple growth stock in a 5% 10Y environment. The business is good (platform leader, profitability inflecting) but the macro regime says underweight. Consider trimming $5-6k and rotating into ZTS or PDN where thesis is unambiguous.</div>
+    </div>
+
+    <div class="pos-card">
+      <div class="pos-top"><div class="pos-ticker">ENVX</div><span class="badge r">Exit — Tax Loss</span></div>
+      <div class="pos-name">Enovix Battery Tech — −86% · $365 residual</div>
+      <div class="pos-stats">
+        <div class="pos-stat"><div class="pos-stat-label">Cost</div><div class="pos-stat-val">$2,656</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Now worth</div><div class="pos-stat-val r-txt">$365</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Verdict</div><div class="pos-stat-val r-txt">Exit</div></div>
+      </div>
+      <div class="pos-thesis">At −86%, ENVX has $365 of residual value on a $2,656 position. Battery tech is long-dated, pre-profit, and not aligned with the current regime (growth tech underweight, 5% 10Y headwind). The position is too small to recover meaningfully. Exit for tax-loss realisation to offset other gains. The story may be right long-term but the market is telling you timing was wrong.</div>
+    </div>
+
+    <div class="pos-card">
+      <div class="pos-top"><div class="pos-ticker">PDN + URNM</div><span class="badge g">✓ Uranium — Hold</span></div>
+      <div class="pos-name">Paladin +117% · Uranium ETF −4%</div>
+      <div class="pos-stats">
+        <div class="pos-stat"><div class="pos-stat-label">PDN P&amp;L</div><div class="pos-stat-val g-txt">+$2,614</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">URNM P&amp;L</div><div class="pos-stat-val r-txt">−$63</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Verdict</div><div class="pos-stat-val g-txt">Multi-year hold</div></div>
+      </div>
+      <div class="pos-thesis">Uranium is the highest-conviction commodity call for 2026-2028. AI datacentres need baseload clean power; nuclear is the only viable option at scale; uranium supply has not kept pace with new reactor demand. PDN is producing and beating — +117% proves the thesis. URNM consolidates royalties. The US entity also has SRUUF ($7.4k, −1%) — consider whether this should consolidate into URNM for simplicity.</div>
+    </div>
+
+    <div class="pos-card">
+      <div class="pos-top"><div class="pos-ticker">SLV + CEF</div><span class="badge y">Silver — Timing Issue</span></div>
+      <div class="pos-name">Silver Trust −4% · Sprott Gold+Silver −4%</div>
+      <div class="pos-stats">
+        <div class="pos-stat"><div class="pos-stat-label">SLV entry</div><div class="pos-stat-val">$46.00</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Now</div><div class="pos-stat-val">$44.13</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Verdict</div><div class="pos-stat-val g-txt">Hold</div></div>
+      </div>
+      <div class="pos-thesis">The silver thesis is intact (solar demand, gold/silver ratio compression, reflation trade) — this is a timing issue, not a thesis break. Entry was at the top of a move; the December Fed data (PCE Nov 27, FOMC Dec 11) are the next catalysts. CEF holds both gold and silver physically. AGE (ASX silver miner, −36%) is underperforming the commodity — consider whether a pure commodity ETF (SLV/CEF) is cleaner than a single miner.</div>
+    </div>
+
+    <div class="pos-card">
+      <div class="pos-top"><div class="pos-ticker">MELI + FLUT</div><span class="badge y">Off-Thesis — Review</span></div>
+      <div class="pos-name">MercadoLibre −5% · Flutter −11%</div>
+      <div class="pos-stats">
+        <div class="pos-stat"><div class="pos-stat-label">MELI cost</div><div class="pos-stat-val">$9,385</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">FLUT cost</div><div class="pos-stat-val">$4,584</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Verdict</div><div class="pos-stat-val y-txt">Review</div></div>
+      </div>
+      <div class="pos-thesis">Both are high-multiple growth stocks in off-thesis territory. MELI: best LatAm fintech but Brazil macro (Selic 11.25%, BRL weak, 7.4% deficit) is a direct headwind. FLUT: FanDuel parent, good business, but consumer discretionary and XLY is in the bottom quarter of sector rotation. If these are 5+ year conviction holds, fine — but if macro trades, they're in the wrong zone. Consider trimming MELI partially.</div>
+    </div>
+
+    <div class="pos-card">
+      <div class="pos-top"><div class="pos-ticker">VOO</div><span class="badge g">✓ Core — Hold</span></div>
+      <div class="pos-name">Vanguard S&amp;P 500 — +$4,580 (+79%)</div>
+      <div class="pos-stats">
+        <div class="pos-stat"><div class="pos-stat-label">Cost</div><div class="pos-stat-val">$5,820</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Value</div><div class="pos-stat-val g-txt">$10,401</div></div>
+        <div class="pos-stat"><div class="pos-stat-label">Verdict</div><div class="pos-stat-val g-txt">Core hold</div></div>
+      </div>
+      <div class="pos-thesis">Your best holding by absolute dollar gain (+$4,580). VOO as a core position is never wrong in a regime where the HY OAS credit gate is open and the Fed is on hold. Hold. If you want to rotate toward more active calls, trim 10-15% to fund sector-specific overweights, but VOO as a foundation position is correct macro positioning.</div>
+    </div>
+
+  </div>
+
+  <div class="section-hd"><h2>Priority Decision List</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Priority</th><th>Position</th><th>Action</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge r">1 — Urgent</span></td><td>3067:HKG</td><td>Set hard stop $7.50 or exit</td><td>−34%, largest loss. No averaging down. Decide: thesis or exit.</td></tr>
+        <tr><td><span class="badge r">2 — Urgent</span></td><td>ENVX</td><td>Exit for tax-loss harvest</td><td>−86%, $365 residual. Not recoverable. Redeploy.</td></tr>
+        <tr><td><span class="badge y">3 — Soon</span></td><td>UBER (oversize)</td><td>Trim 30-40% (~$5-6k)</td><td>14% position weight, off-thesis. Rotate to ZTS / GREK / uranium.</td></tr>
+        <tr><td><span class="badge y">4 — Soon</span></td><td>$12,272 US cash</td><td>Deploy into ZTS + uranium</td><td>Credit gate open. ZTS is high-conviction, undersized. Add PDN or URNM.</td></tr>
+        <tr><td><span class="badge y">5 — Consider</span></td><td>SRUUF → URNM</td><td>Consolidate uranium exposure</td><td>PDN and URNM outperforming SRUUF. Simplify the uranium book.</td></tr>
+        <tr><td><span class="badge y">6 — Consider</span></td><td>AGE vs SLV</td><td>Review silver miner vs ETF</td><td>AGE −36% vs SLV's underlying silver flat. Pure commodity ETF is cleaner.</td></tr>
+        <tr><td><span class="badge g">Hold</span></td><td>GREK, ZTS, PDN, VOO, SLV, D1</td><td>No action needed</td><td>All thesis-aligned, all working or positioned correctly for regime.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: EVENTS
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="events">
+  <div class="aop">
+    <div class="aop-label">Answer on the Page · Events Calendar</div>
+    <div class="aop-title">December FOMC is the pivotal event — 73% chance of hold, with France confidence vote and ECB the European wildcard</div>
+    <div class="aop-body">
+      The near-term event calendar is dominated by the Federal Reserve (December 11 decision: 73% hold per Polymarket), European sovereign stress (France confidence vote imminent — if Barnier falls, OAT-Bund widens to 180bp+), and the ECB (December 12: 25bp cut fully priced). US economic data between now and December FOMC (retail sales Nov 15, PPI Nov 14, PCE Nov 27) will shape whether the Fed's hold is a close call or a clear consensus. Democrats winning the midterms (Nov 4) reduces tail risk of extreme fiscal expansion but doesn't change the structural deficit picture.
+    </div>
+  </div>
+
+  <div class="section-hd"><h2>Upcoming Events</h2></div>
+  <div class="event-list">
+    <div class="event-row">
+      <div class="event-date">Nov 13<br><small>TODAY</small></div>
+      <div>
+        <div class="event-title">US CPI — October</div>
+        <div class="event-sub">Expected: 0.3% MoM core. Hot print (0.4%+) → 10Y yield spike, risk-off. Cool print (0.2%) → modest rally. This is today's market mover.</div>
+      </div>
+      <div class="event-odds"><span class="badge r">HIGH IMPACT</span></div>
+    </div>
+    <div class="event-row">
+      <div class="event-date">Nov 14</div>
+      <div>
+        <div class="event-title">US PPI — October</div>
+        <div class="event-sub">Producer prices feed into PCE with 1-2 month lag. Watch services PPI — if accelerating, confirms sticky PCE narrative.</div>
+      </div>
+      <div class="event-odds"><span class="badge y">MED IMPACT</span></div>
+    </div>
+    <div class="event-row">
+      <div class="event-date">Nov 15</div>
+      <div>
+        <div class="event-title">US Retail Sales — October</div>
+        <div class="event-sub">Consensus +0.4% MoM. Confirms consumer resilience narrative. Auto sales volatile. Watch "control group" (ex-autos, gas, food) — the GDP-relevant metric.</div>
+      </div>
+      <div class="event-odds"><span class="badge y">MED IMPACT</span></div>
+    </div>
+    <div class="event-row">
+      <div class="event-date">Nov ~20</div>
+      <div>
+        <div class="event-title">France — Confidence Vote (TBC)</div>
+        <div class="event-sub">Barnier's government faces no-confidence motion. If falls: caretaker government, budget paralysis, OAT-Bund target 180bp+. If survives: relief rally in OATs, EUR/USD bounces to 1.08. This is the highest-impact European event in years.</div>
+      </div>
+      <div class="event-odds"><span class="badge r">TAIL RISK</span></div>
+    </div>
+    <div class="event-row">
+      <div class="event-date">Nov 27</div>
+      <div>
+        <div class="event-title">US PCE — October</div>
+        <div class="event-sub">The Fed's preferred inflation measure. Consensus: 2.7% YoY. If 2.5% or below → Dec cut discussion opens. If 3.0%+ → Fed hawkish pivot risk. Last data point before December FOMC communications blackout.</div>
+      </div>
+      <div class="event-odds"><span class="badge r">HIGH IMPACT</span></div>
+    </div>
+    <div class="event-row">
+      <div class="event-date">Dec 6</div>
+      <div>
+        <div class="event-title">US Jobs Report — November</div>
+        <div class="event-sub">Last major labour market data before Dec FOMC. Consensus: +150k. Watch unemployment rate — if 4.3%+, the Fed's "maximum employment" mandate triggers cut discussion.</div>
+      </div>
+      <div class="event-odds"><span class="badge r">HIGH IMPACT</span></div>
+    </div>
+    <div class="event-row">
+      <div class="event-date">Dec 11</div>
+      <div>
+        <div class="event-title">FOMC Decision — December Meeting</div>
+        <div class="event-sub">Market pricing: 73% hold, 20% cut, 7% hike. Base case: hold at 3.75-4.00%. Dot plot update will shape 2027 path. Powell press conference is the key — watch language around "restrictive" (cut bias) vs "appropriate" (hold).</div>
+      </div>
+      <div class="event-odds mono">73% hold</div>
+    </div>
+    <div class="event-row">
+      <div class="event-date">Dec 12</div>
+      <div>
+        <div class="event-title">ECB Decision — December Meeting</div>
+        <div class="event-sub">25bp cut fully priced (deposit rate to 3.0%). Key question: does Lagarde comment on France? Any language on TPI eligibility will move OAT spreads materially. Watch EUR/USD post-decision.</div>
+      </div>
+      <div class="event-odds mono">25bp cut</div>
+    </div>
+  </div>
+
+  <div class="section-hd"><h2>Polymarket Probabilities</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Market</th>
+        <th class="r">Probability</th>
+        <th class="r">Chg 1W</th>
+        <th>Implication</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Fed holds Dec 11</td><td class="r mono-cell g-txt">73%</td><td class="r mono-cell y-txt">+5%</td><td>Hold is base case; cut requires significant data deterioration</td></tr>
+        <tr><td>US recession within 12M</td><td class="r mono-cell g-txt">18%</td><td class="r mono-cell g-txt">−3%</td><td>Soft landing confirmed by ISM 55.5; recession risk minimal</td></tr>
+        <tr><td>France no-confidence passes</td><td class="r mono-cell y-txt">58%</td><td class="r mono-cell r-txt">+12%</td><td>Barnier likely falls; caretaker scenario increasingly likely</td></tr>
+        <tr><td>Brent above $90 by Jan</td><td class="r mono-cell y-txt">32%</td><td class="r mono-cell y-txt">+2%</td><td>OPEC+ discipline holding; China stimulus optionality</td></tr>
+        <tr><td>10Y UST above 5.50% by Q1</td><td class="r mono-cell y-txt">28%</td><td class="r mono-cell r-txt">+6%</td><td>Bear steepener tail risk; watch term premium vs PCE data</td></tr>
+        <tr><td>ECB cuts 25bp Dec 12</td><td class="r mono-cell g-txt">91%</td><td class="r mono-cell y-txt">+1%</td><td>Fully priced; no surprise expected unless France crisis escalates</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tldr"><strong>TL;DR — Events</strong>The next 30 days are event-dense. Today's CPI (Nov 13) is an immediate market mover. France confidence vote (~Nov 20) is the biggest tail risk in Europe in years. December FOMC (73% hold) is likely a non-event barring data surprises. The PCE print (Nov 27) is the last major Fed input — if it comes in at 2.5%, December cut probability surges to 50%+. Position accordingly: hold short-duration, watch OAT-Bund for France entry/exit signals.</div>
+</div>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t => { if (t.dataset.page === id) t.classList.add('active'); });
+  // restore hash
+  try { history.replaceState(null, '', '#' + id); } catch(e) {}
+}
+// nav clicks
+document.getElementById('nav').addEventListener('click', e => {
+  const tab = e.target.closest('.nav-tab');
+  if (tab) showPage(tab.dataset.page);
+});
+// hash routing on load
+(function() {
+  const hash = location.hash.replace('#','');
+  const valid = ['overview','macro','bonds','world','markets','positions','events'];
+  if (valid.includes(hash)) showPage(hash);
+})();
+</script>
