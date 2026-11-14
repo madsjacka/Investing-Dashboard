@@ -486,6 +486,7 @@ tr:last-child td { border-bottom: none; }
   <div class="nav-tab" data-page="markets">Markets</div>
   <div class="nav-tab" data-page="positions">Positions</div>
   <div class="nav-tab" data-page="events">Events</div>
+  <div class="nav-tab" data-page="signals">Signals</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════
@@ -1776,6 +1777,137 @@ tr:last-child td { border-bottom: none; }
     </table>
   </div>
   <div class="tldr"><strong>TL;DR — Events</strong>The next 30 days are event-dense. Today's CPI (Nov 13) is an immediate market mover. France confidence vote (~Nov 20) is the biggest tail risk in Europe in years. December FOMC (73% hold) is likely a non-event barring data surprises. The PCE print (Nov 27) is the last major Fed input — if it comes in at 2.5%, December cut probability surges to 50%+. Position accordingly: hold short-duration, watch OAT-Bund for France entry/exit signals.</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE: SIGNALS — Cross-Screen Ranking
+     ═══════════════════════════════════════════════════ -->
+<div class="page" id="signals">
+  <div class="aop">
+    <div class="aop-label">Answer on the Page · Signals</div>
+    <div class="aop-title">Cross-screen ranking: names appearing in two or more screens carry the strongest conviction — this is where the desk looks first</div>
+    <div class="aop-body">The eight investment screens (13F smart money, cheap options, sector rotation, insider + whale, macro brief, estimate revisions, short squeeze, buybacks) each surface ideas independently. When the same name appears in two or more screens simultaneously, conviction is structurally higher — the edge is confirmed from multiple independent angles. This page aggregates those signals weekly and ranks them. It also tracks concentration risk (names adding to uranium, healthcare, Greece or silver) and post-mortem outcomes to improve screen calibration over time. Screens run as skills; this page is updated weekly after all eight complete.</div>
+    <div class="aop-pills">
+      <span class="aop-pill g">Multi-screen = highest conviction</span>
+      <span class="aop-pill y">Single-screen = watchlist only</span>
+      <span class="aop-pill r">Concentration flag if book theme overlap</span>
+      <span class="aop-pill b">Post-mortem tracked at 30/90/180d</span>
+    </div>
+  </div>
+
+  <div class="section-hd"><h2>Cross-Screen Heat Map — Week of Nov 14, 2026</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Name</th>
+        <th class="r">Screens hit</th>
+        <th>13F</th>
+        <th>Options</th>
+        <th>Rotation</th>
+        <th>Insider</th>
+        <th>Revisions</th>
+        <th>Squeeze</th>
+        <th>Buyback</th>
+        <th>Book</th>
+        <th>Flag</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td colspan="11" style="text-align:center;color:var(--fg3);padding:32px 0;font-style:italic;">
+            Screens have not yet run this week. Populate after completing all eight screen skills.<br>
+            Run <strong>screen-smart-money-13f</strong>, <strong>screen-cheap-options-earnings</strong>, <strong>screen-sector-rotation-flows</strong>, <strong>screen-insiders-options-whales</strong>, <strong>screen-earnings-revisions</strong>, <strong>screen-short-squeeze</strong>, <strong>screen-buybacks</strong>, then update this table.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-hd"><h2>Screen Rules — Shared Standards</h2></div>
+  <div class="ind-grid">
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">Liquidity Gate</div><div class="badge b">All screens</div></div>
+      <div class="ind-value" style="font-size:1.1rem;">$1B / $10M</div>
+      <div class="ind-sub">Min market cap / min avg daily volume</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Every name from every screen must clear $1B market cap and $10M average daily traded value. Names that do not clear are dropped and noted.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Sub-liquidity names can appear in screens (13F, insider, short squeeze) but be uninvestable at any meaningful size. The gate prevents tracking ideas you cannot act on.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Applied before any name reaches the heat map. If a name fails the gate, note it in the screen output but exclude from cross-screen ranking.</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">No Sizing Until Policy Set</div><div class="badge r">Hard rule</div></div>
+      <div class="ind-value" style="font-size:1.1rem;">IPS pending</div>
+      <div class="ind-sub">Investment policy statement required first</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">No screen output includes a position size recommendation. All sizing decisions are deferred until an Investment Policy Statement (IPS) is agreed and in place.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Without a risk budget, concentration limits, and return objectives defined, any sizing is arbitrary. The screens identify what; the IPS defines how much.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Outputs are call type (Buy / Watchlist / Pass / No action), reference price, entry levels, key assumption, falsifier, next catalyst, review date — not dollar amounts or percentages.</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">Call Record & Post-Mortem</div><div class="badge g">Every name</div></div>
+      <div class="ind-value" style="font-size:1.1rem;">30/90/180d</div>
+      <div class="ind-sub">Scored at three horizons</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Every name gets a call record: call type, reference price and date, entry levels, the one key assumption, what would prove it wrong, next catalyst, review date.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Scoring at 30, 90 and 180 days shows which screens and which assumptions actually predict outcomes. Without this, the screens do not improve.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">At each review: note which assumption drove the result — right or wrong, and for the right or wrong reason. This is how screen calibration improves over time.</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">15% Five-Year Hurdle</div><div class="badge b">All names</div></div>
+      <div class="ind-value" style="font-size:1.1rem;">15% p.a.</div>
+      <div class="ind-sub">Minimum five-year return threshold</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">No name is advanced from watchlist to buy without a credible path to 15% per year over five years. Applied to all eight screens equally.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">The hurdle filters out low-conviction ideas that may screen well on a technical signal but do not offer adequate return for the risk of active management vs index ownership.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">State the return case explicitly in the call record. If the hurdle cannot be clearly argued, the call is Watchlist or Pass, not Buy.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-hd"><h2>Concentration Themes — Book Flags</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Theme</th>
+        <th>Current positions</th>
+        <th>Alert: adds to theme</th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Uranium</strong></td><td>PDN, SRUUF, URNM (IB)</td><td>Any new uranium equity or royalty name</td></tr>
+        <tr><td><strong>Healthcare</strong></td><td>ZTS (US)</td><td>Any new healthcare / biotech / medtech name</td></tr>
+        <tr><td><strong>Greece / EM Europe</strong></td><td>GREK (IB)</td><td>Any new Greece, Balkans, or EM Europe exposure</td></tr>
+        <tr><td><strong>Silver / Precious metals</strong></td><td>SLV, AGE (IB)</td><td>Any new silver miner, gold miner, or precious-metals ETF</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-hd"><h2>Prior Week Outcomes — Post-Mortem Log</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th>Name</th>
+        <th>Call</th>
+        <th>Ref price</th>
+        <th>30d outcome</th>
+        <th>Assumption tested</th>
+        <th>Right for right reason?</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td colspan="6" style="text-align:center;color:var(--fg3);padding:24px 0;font-style:italic;">
+            No prior calls logged yet. Post-mortem entries populate here 30 days after the first screen cycle completes.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
