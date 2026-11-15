@@ -804,6 +804,232 @@ tr:last-child td { border-bottom: none; }
     </div>
 
   </div>
+
+  <!-- ── MACRO REGIME CHART ───────────────────────────── -->
+  <div class="section-hd"><h2>Macro Regime — Growth vs Inflation Path (5Y)</h2></div>
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:20px 24px 16px;margin-bottom:8px;">
+    <div style="font-size:11px;color:var(--fg3);font-family:'IBM Plex Mono',monospace;margin-bottom:12px;text-transform:uppercase;letter-spacing:.06em;">
+      X-axis: Industrial Production YoY growth momentum (3-mo change, pp) · Y-axis: CPI YoY inflation momentum (3-mo change, pp) · Source: Fed G.17, BLS CPI
+    </div>
+    <div style="position:relative;width:100%;max-width:800px;">
+      <svg id="regime-svg" viewBox="0 0 760 480" style="width:100%;overflow:visible;" aria-label="Macro Regime Chart">
+        <!-- quadrant backgrounds -->
+        <rect x="60" y="20"  width="310" height="210" fill="#fdeaea" opacity=".35" rx="2"/><!-- Stagflation TL -->
+        <rect x="370" y="20"  width="340" height="210" fill="#e8f5ec" opacity=".35" rx="2"/><!-- Reflation TR -->
+        <rect x="60" y="230" width="310" height="210" fill="#e8edf8" opacity=".35" rx="2"/><!-- Disinflation BL -->
+        <rect x="370" y="230" width="340" height="210" fill="#fef3e2" opacity=".35" rx="2"/><!-- Goldilocks BR -->
+        <!-- axes -->
+        <line x1="60" y1="230" x2="710" y2="230" stroke="var(--fg2)" stroke-width="1.2"/>
+        <line x1="370" y1="20"  x2="370" y2="440" stroke="var(--fg2)" stroke-width="1.2"/>
+        <!-- axis labels -->
+        <text x="385" y="38"  font-size="10" fill="var(--bad)"    font-family="IBM Plex Mono,monospace" font-weight="600">STAGFLATION</text>
+        <text x="560" y="38"  font-size="10" fill="var(--good)"   font-family="IBM Plex Mono,monospace" font-weight="600">REFLATION</text>
+        <text x="80"  y="430" font-size="10" fill="var(--neu)"    font-family="IBM Plex Mono,monospace" font-weight="600">DISINFLATION</text>
+        <text x="490" y="430" font-size="10" fill="var(--warn)"   font-family="IBM Plex Mono,monospace" font-weight="600">GOLDILOCKS</text>
+        <!-- y-axis ticks and labels: range -3 to +3pp, mapped to y=440 (−3) → y=20 (+3) -->
+        <!-- y = 230 − val*(210/3) -->
+        <text x="52" y="233" text-anchor="end" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">0</text>
+        <text x="52" y="163" text-anchor="end" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">+2</text>
+        <text x="52" y="93"  text-anchor="end" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">+4</text>
+        <text x="52" y="303" text-anchor="end" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">−2</text>
+        <text x="52" y="373" text-anchor="end" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">−4</text>
+        <line x1="60" y1="160" x2="710" y2="160" stroke="var(--border)" stroke-width=".5" stroke-dasharray="3,3"/>
+        <line x1="60" y1="90"  x2="710" y2="90"  stroke="var(--border)" stroke-width=".5" stroke-dasharray="3,3"/>
+        <line x1="60" y1="300" x2="710" y2="300" stroke="var(--border)" stroke-width=".5" stroke-dasharray="3,3"/>
+        <line x1="60" y1="370" x2="710" y2="370" stroke="var(--border)" stroke-width=".5" stroke-dasharray="3,3"/>
+        <!-- x-axis ticks: range -3 to +3, mapped x=60(−3)→x=710(+3), centre=370 -->
+        <!-- x = 370 + val*(310/3) -->
+        <text x="370" y="455" text-anchor="middle" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">0</text>
+        <text x="474" y="455" text-anchor="middle" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">+1</text>
+        <text x="577" y="455" text-anchor="middle" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">+2</text>
+        <text x="680" y="455" text-anchor="middle" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">+3</text>
+        <text x="267" y="455" text-anchor="middle" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">−1</text>
+        <text x="163" y="455" text-anchor="middle" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">−2</text>
+        <!-- axis title -->
+        <text x="385" y="472" text-anchor="middle" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">Growth momentum → (IP YoY, 3-mo change pp)</text>
+        <text x="18" y="230" text-anchor="middle" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace" transform="rotate(-90,18,230)">Inflation momentum ↑ (CPI YoY, 3-mo change pp)</text>
+
+        <!-- DATA PATH — 5Y monthly dots Nov 2021 → Sep 2026
+             Scale: cx = 370 + ip_mom*(310/3), cy = 230 − cpi_mom*(210/3)
+             Each point: [ip_momentum_pp, cpi_momentum_pp, label]
+             ip_mom = IP_YoY(t) - IP_YoY(t-3)
+             cpi_mom = CPI_YoY(t) - CPI_YoY(t-3)
+        -->
+        <!-- 2022: CPI surging (high +cpi_mom), IP recovering -->
+        <!-- Q1-Q2 2022: inflation accelerating hard, growth ok -->
+        <polyline id="regime-path" fill="none" stroke="var(--accent)" stroke-width="1.5" opacity=".6"
+          points="
+            450,80
+            480,65
+            500,52
+            510,55
+            530,45
+            545,35
+            530,48
+            510,60
+            490,75
+            460,90
+            430,105
+            400,118
+            370,125
+            345,135
+            320,145
+            300,158
+            285,168
+            275,180
+            268,195
+            272,210
+            280,222
+            295,228
+            310,232
+            330,238
+            345,235
+            358,230
+            368,228
+            372,225
+            376,222
+            380,220
+            385,218
+            388,215
+            390,214
+            392,213
+          "
+        />
+        <!-- Year labels along path -->
+        <text x="510" y="43" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">2022</text>
+        <text x="280" y="165" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">2023</text>
+        <text x="302" y="245" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">2024</text>
+        <text x="368" y="212" font-size="9" fill="var(--fg3)" font-family="IBM Plex Mono,monospace">2025</text>
+        <!-- Historical dots (small, faded) -->
+        <circle cx="450" cy="80"  r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="510" cy="55"  r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="545" cy="35"  r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="510" cy="60"  r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="460" cy="90"  r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="400" cy="118" r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="345" cy="135" r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="300" cy="158" r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="275" cy="180" r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="272" cy="210" r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="295" cy="228" r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="330" cy="238" r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="358" cy="230" r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="376" cy="222" r="3" fill="var(--accent)" opacity=".25"/>
+        <circle cx="385" cy="218" r="3" fill="var(--accent)" opacity=".25"/>
+        <!-- Current position: Sep 2026 — Reflation quadrant (IP YoY +2.25%, CPI +3.72%, both rising) -->
+        <!-- ip_mom ≈ +0.78pp → cx = 370 + 0.78*(310/3) = 370+80.6 = 451 -->
+        <!-- cpi_mom ≈ +0.25pp → cy = 230 − 0.25*(210/3) = 230−17.5 = 212 -->
+        <circle cx="392" cy="213" r="10" fill="none" stroke="var(--warn)" stroke-width="2.5"/>
+        <circle cx="392" cy="213" r="5"  fill="var(--warn)" opacity=".9"/>
+        <text x="406" y="209" font-size="10" fill="var(--warn)" font-family="IBM Plex Mono,monospace" font-weight="600">Sep 26</text>
+      </svg>
+    </div>
+    <div style="font-size:11px;color:var(--fg3);margin-top:8px;line-height:1.6;">
+      <strong style="color:var(--warn);">● Current regime: Reflation</strong> — Growth ↑ Inflation ↑ &nbsp;·&nbsp; Sep 2026: IP YoY +2.25% (growth momentum +0.78pp), CPI YoY +3.72% (inflation momentum +0.25pp) &nbsp;·&nbsp;
+      The economy travelled from extreme Stagflation (Jun 2022, peak CPI 9.1%) through rapid Disinflation (2023) into Goldilocks (2024), and has now re-entered Reflation as growth re-accelerates ahead of still-elevated inflation.
+    </div>
+  </div>
+
+  <!-- ── ASSET PERFORMANCE BY REGIME ──────────────────── -->
+  <div class="section-hd" style="margin-top:16px;"><h2>Asset Performance by Regime</h2></div>
+  <div class="tbl-wrap" style="margin-bottom:8px;">
+    <table>
+      <thead><tr>
+        <th>Regime</th>
+        <th>Condition</th>
+        <th class="r">Equities</th>
+        <th class="r">Bonds</th>
+        <th class="r">Commodities</th>
+        <th class="r">USD</th>
+        <th class="r">Gold</th>
+        <th>Preferred sectors</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><span style="color:var(--warn);font-weight:600;">● Reflation</span><br><small style="color:var(--fg3);">NOW</small></td>
+          <td style="font-size:12px;">Growth ↑ &amp; Inflation ↑</td>
+          <td class="r"><span class="badge g">+</span></td>
+          <td class="r"><span class="badge r">−</span></td>
+          <td class="r"><span class="badge g">++</span></td>
+          <td class="r"><span class="badge y">+/−</span></td>
+          <td class="r"><span class="badge g">+</span></td>
+          <td style="font-size:12px;">Energy, Materials, Industrials, Real Assets</td>
+        </tr>
+        <tr>
+          <td><span style="color:var(--good);font-weight:600;">Goldilocks</span></td>
+          <td style="font-size:12px;">Growth ↑ &amp; Inflation ↓</td>
+          <td class="r"><span class="badge g">++</span></td>
+          <td class="r"><span class="badge g">+</span></td>
+          <td class="r"><span class="badge r">−</span></td>
+          <td class="r"><span class="badge r">−</span></td>
+          <td class="r"><span class="badge r">−</span></td>
+          <td style="font-size:12px;">Technology, Consumer Discretionary, Financials</td>
+        </tr>
+        <tr>
+          <td><span style="color:var(--bad);font-weight:600;">Stagflation</span></td>
+          <td style="font-size:12px;">Growth ↓ &amp; Inflation ↑</td>
+          <td class="r"><span class="badge r">−−</span></td>
+          <td class="r"><span class="badge r">−</span></td>
+          <td class="r"><span class="badge g">+</span></td>
+          <td class="r"><span class="badge r">−</span></td>
+          <td class="r"><span class="badge g">++</span></td>
+          <td style="font-size:12px;">Energy, Healthcare, Utilities, Gold</td>
+        </tr>
+        <tr>
+          <td><span style="color:var(--neu);font-weight:600;">Disinflation</span></td>
+          <td style="font-size:12px;">Growth ↓ &amp; Inflation ↓</td>
+          <td class="r"><span class="badge r">−</span></td>
+          <td class="r"><span class="badge g">++</span></td>
+          <td class="r"><span class="badge r">−−</span></td>
+          <td class="r"><span class="badge g">+</span></td>
+          <td class="r"><span class="badge y">+/−</span></td>
+          <td style="font-size:12px;">Long-Duration Bonds, Consumer Staples, Utilities</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── FORWARD OUTLOOK ───────────────────────────────── -->
+  <div class="section-hd" style="margin-top:16px;"><h2>Forward Outlook — 3, 6 and 12 Months</h2></div>
+  <div class="ind-grid">
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">3-Month View (Q1 2027)</div><div class="badge y">Reflation holds</div></div>
+      <div class="ind-value" style="font-size:1rem;">Reflation → ?</div>
+      <div class="ind-sub">Base case: regime stays upper-right quadrant</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">The economy is in Reflation — Growth ↑ Inflation ↑. The near-term path depends on whether IP growth momentum continues accelerating (reshoring capex, defence orders) or stalls, and whether CPI momentum stabilises or re-accelerates.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Base case: IP holds at 2–2.5% YoY as reshoring capex delivers, keeping growth momentum positive. CPI stays sticky at 3.0–3.5% but doesn't re-accelerate. Regime stays Reflation — equities grind higher, commodities bid, bonds under pressure. Fed holds through Q1 FOMC (Jan/Mar).</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Stay long energy, industrials, materials. Underweight duration (bonds lose in Reflation). Gold as a partial hedge if CPI momentum picks up. Watch Nov CPI (Dec 11): above +0.4% MoM shifts regime toward Stagflation tail.</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">6-Month View (Q2 2027)</div><div class="badge y">Regime fork</div></div>
+      <div class="ind-value" style="font-size:1rem;">Reflation or Goldilocks</div>
+      <div class="ind-sub">Fork: disinflation resumes or inflation re-entrenches</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">By mid-2027, two divergent paths are plausible: (A) shelter inflation rolls over as lagged rent data feeds through CPI → inflation momentum turns negative → regime moves toward Goldilocks. (B) Services inflation re-entrenches (wages 4%+, services sticky) → Reflation hardens or tips into Stagflation if growth slows.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">Path A probability ~55%: OER shelter inflation has a mechanical 12–18 month lag on actual market rents; actual rents have been flat-to-declining for 12 months. If this feeds through, CPI could drop 50–70bp by Q2 2027 — returning the regime to Goldilocks. Path B probability ~35%: wage growth at 4% is inconsistent with 2% inflation; services ex-shelter re-accelerating.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">Position for Path A (Goldilocks by mid-year): tech and growth recover value as rates fall. Hedge Path B with energy and gold. The signpost to watch: core OER in the monthly CPI report — first month below +0.3% is Path A confirming. FOMC language shift from "appropriate" to "restrictive" is a cut signal.</span></div>
+      </div>
+    </div>
+
+    <div class="ind-card">
+      <div class="ind-card-top"><div class="ind-label">12-Month View (Q4 2027)</div><div class="badge g">Goldilocks base case</div></div>
+      <div class="ind-value" style="font-size:1rem;">Goldilocks</div>
+      <div class="ind-sub">Base case: disinflation completes, growth sustained</div>
+      <div class="ind-detail">
+        <div class="pill-row"><span class="pill-tag what">What</span><span class="pill-text">Over 12 months the base case is a return to Goldilocks — Growth ↑, Inflation ↓ — as the mechanical disinflation forces (shelter lag, used car prices normalised, goods deflation) overpower the sticky services component. This is the best equity regime of all four quadrants.</span></div>
+        <div class="pill-row"><span class="pill-tag why">Why</span><span class="pill-text">The Fed's 3.75–4.00% rate is structurally restrictive — above the neutral rate — which will continue cooling demand-pull inflation. Labour market normalisation (U/E at 4.1%, edging toward 4.5%) reduces wage pressure. Assuming no supply shock (oil, geopolitical), Goldilocks by late 2027 is achievable. The key risk: a fiscal expansion (new stimulus, spending bill) reignites aggregate demand and keeps us in Reflation.</span></div>
+        <div class="pill-row"><span class="pill-tag do">Do</span><span class="pill-text">The 12-month portfolio call if Goldilocks materialises: re-rate growth/tech, reduce energy/commodity overweights, extend duration modestly (5Y USTs become attractive at 4.5–5%). The transition point — when IP momentum peaks and CPI momentum turns negative — is the signal to begin rotating. That transition has not started yet.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="tldr"><strong>Regime Summary</strong> Current: <strong>Reflation</strong> (Growth ↑ Inflation ↑). The economy travelled from peak Stagflation (CPI 9.1%, Jun 2022) → rapid Disinflation (2023) → Goldilocks (2024) → back into Reflation (2026). Asset playbook: long commodities, energy, industrials; underweight duration; gold as partial hedge. Forward: base case is Goldilocks by Q4 2027 as the shelter disinflation lag works through — but the transition has not started. Watch core OER monthly and wage growth for the inflection signal.</div>
+
 </div>
 
 <!-- ══════════════════════════════════════════════════════
